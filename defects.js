@@ -566,6 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     applyFiltersBtn.addEventListener('click', () => renderDefects(getCurrentFilters()));
+    searchFleetNumberInput.addEventListener('input', () => renderDefects(getCurrentFilters()));
     clearAllFiltersBtn.addEventListener('click', () => {
         searchFleetNumberInput.value = '';
         statusSelect.value = 'all';
