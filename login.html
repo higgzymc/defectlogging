@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defect Logger Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #FFA500;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px; /* Adjusted margin */
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95em; /* Adjusted font size */
+            text-align: left; /* Align labels to left */
+        }
+        input[type="email"], input[type="password"], input[type="text"] { /* Added input[type="text"] */
+            width: 100%; /* Take full width */
+            padding: 12px; /* Adjusted padding */
+            margin-bottom: 15px; /* Adjusted margin */
+            border: 1px solid #ced4da; /* Lighter border */
+            border-radius: 5px; /* Softer corners */
+            font-size: 1em; /* Consistent font size */
+            box-sizing: border-box; /* Include padding in width */
+            background-color: #fcfcfc; /* Consistent background */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Consistent transition */
+        }
+        input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus { /* Consistent focus style */
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-weight: 500;
+            width: 100%; /* Buttons take full width */
+            box-sizing: border-box;
+            margin-bottom: 10px; /* Space between buttons */
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        button:active {
+            transform: translateY(1px);
+        }
+        #signupBtn {
+            background-color: #28a745; /* Green for Sign Up */
+        }
+        #signupBtn:hover {
+            background-color: #218838;
+        }
+        #googleLoginBtn { /* NEW style for Google button */
+            background-color: #db4437; /* Google red */
+            color: white;
+            display: flex; /* Use flexbox to center content */
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Space between icon and text */
+            margin-top: 15px; /* Space above button */
+        }
+        #googleLoginBtn:hover {
+            background-color: #c0392b;
+        }
+        #googleLoginBtn img {
+            height: 20px; /* Size for Google icon */
+            width: 20px;
+            vertical-align: middle;
+        }
+
+
+        #loginError {
+            color: #dc3545; /* Red for error messages */
+            font-size: 0.9em;
+            margin-top: -10px; /* Pull error message closer to inputs */
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        .register-section { /* For the name dropdown during registration */
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #e0e0e0;
+        }
+        .register-section p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .oauth-section { /* NEW section for OAuth buttons */
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed #e0e0e0;
+            text-align: center;
+        }
+        .oauth-section p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+
+        /* Logo styling (copied from index.html) */
+        #companyLogo {
+            display: block;
+            margin: 0 auto 30px auto;
+            max-width: 180px;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive adjustments for logo on login page */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            #companyLogo {
+                max-width: 120px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img id="companyLogo" src="images/logo.png" alt="Company Logo">
+        <h1>Login to Defect Logger</h1>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="enter email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="enter password" required>
+
+        <p id="loginError" style="display: none;"></p> <button id="loginBtn">Login</button>
+
+        <div class="register-section">
+            <p>New user? Sign up here:</p>
+            <label for="signupDisplayName">Your Name:</label>
+            <input type="text" id="signupDisplayName" placeholder="e.g., James Smith" required>
+            <button id="signupBtn">Sign Up</button>
+        </div>
+
+        <div class="oauth-section">
+            <p>Or sign in with:</p>
+            <button id="googleLoginBtn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google icon">
+                Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // REPLACE ALL PLACEHOLDERS BELOW WITH YOUR ACTUAL VALUES FROM FIREBASE CONSOLE!
+        const firebaseConfig = {
+            apiKey: "AIzaSyDZSLkUnbpm4Xeszia20I2FEBRvrcnQdsg", // Your actual API Key
+            authDomain: "bus-defect-logger-app.firebaseapp.com", // Your actual Auth Domain
+            projectId: "bus-defect-logger-app",   // Your actual Project ID
+            storageBucket: "bus-defect-logger-app.firebasestorage.app", // Your actual Storage Bucket
+            messagingSenderId: "521037668302", // Your actual Sender ID
+            appId: "1:521037668302:web:35b950b4980f15c7d3559f", // Your actual App ID
+            measurementId: "G-YYGKDCKPRT" // Your actual Measurement ID (optional)
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Get Firebase Auth and Firestore instances
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+
+        // Force sign out any existing session when login.html loads
+        auth.signOut().catch(error => {
+            // console.warn("No active session to sign out or sign out error:", error);
+        });
+
+
+        // Get references to HTML elements
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupDisplayNameInput = document.getElementById('signupDisplayName');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginError = document.getElementById('loginError');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+
+
+        const companyLogo = document.getElementById('companyLogo');
+        companyLogo.src = "images/logo.png";
+
+
+        // Function to display errors
+        function displayError(message) {
+            loginError.textContent = message;
+            loginError.style.display = 'block';
+        }
+
+        // Function to hide errors
+        function hideError() {
+            loginError.style.display = 'none';
+            loginError.textContent = '';
+        }
+
+        // --- Sign Up Logic ---
+        signupBtn.addEventListener('click', async () => {
+            hideError();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const displayName = signupDisplayNameInput.value.trim();
+
+            if (email === '' || password === '') {
+                displayError('Email and Password cannot be empty.');
+                return;
+            }
+            if (displayName === '') {
+                displayError('Please enter your name for registration.');
+                return;
+            }
+            if (password.length < 6) {
+                displayError('Password must be at least 6 characters long.');
+                return;
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                await db.collection('users').doc(user.uid).set({
+                    displayName: displayName,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await user.updateProfile({
+                    displayName: displayName
+                });
+
+                alert(`Account created successfully for ${displayName}! You are now logged in.`);
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Sign Up Error:", error);
+                let errorMessage = "Sign up failed. Please try again.";
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'The email address is already in use by another account.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'The email address is not valid.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'The password is too weak.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = 'Email/Password sign up is not enabled. (Check Firebase console)';
+                        break;
+                    default:
+                        errorMessage = `Sign up failed: ${error.message}`;
+                }
+                displayError(errorMessage);
+            }
+        });
+
+        // --- Login Logic ---
+        loginBtn.addEventListener('click', async () => {
+            hideError();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (email === '' || password === '') {
+                displayError('Email and Password cannot be empty.');
+                return;
+            }
+
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Login Error:", error);
+                let errorMessage = "Login failed. Please check your credentials.";
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'Invalid email address.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'This user account has been disabled.';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'No user found with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Incorrect password.';
+                        break;
+                    default:
+                        errorMessage = `Login failed: ${error.message}`;
+                }
+                displayError(errorMessage);
+            }
+        });
+
+        // --- Google Login Logic ---
+        googleLoginBtn.addEventListener('click', async () => {
+            hideError();
+            const provider = new firebase.auth.GoogleAuthProvider();
+
+            try {
+                const userCredential = await auth.signInWithPopup(provider);
+                const user = userCredential.user;
+
+                const userDocRef = db.collection('users').doc(user.uid);
+                const userDoc = await userDocRef.get();
+
+                if (!userDoc.exists) {
+                    await userDocRef.set({
+                        displayName: user.displayName || user.email,
+                        email: user.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    alert(`Welcome, ${user.displayName || user.email}! Account created successfully.`);
+                } else {
+                    alert(`Welcome back, ${userDoc.data().displayName || user.email}!`);
+                }
+
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                console.error("Google Login Error:", error);
+                let errorMessage = "Google sign-in failed. Please try again.";
+                switch (error.code) {
+                    case 'auth/popup-closed-by-user':
+                        errorMessage = 'Google sign-in window closed.';
+                        break;
+                    case 'auth/cancelled-popup-request':
+                        errorMessage = 'Sign-in window already open.';
+                        break;
+                    default:
+                        errorMessage = `Google sign-in failed: ${error.message}`;
+                }
+                displayError(errorMessage);
+            }
+        });
+
+    </script>
+</body>
+</html>

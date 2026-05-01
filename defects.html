@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Defects - Bus Defect Logger</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <button id="menuBtn" class="menu-btn">&#9776;</button>
+            <h1 class="header-title">All Logged Defects</h1>
+            <div id="loggedInUserDisplay">
+                Logged in as: <span id="currentUserName"></span>
+                <button id="logoutBtn">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
+        <a href="./index.html">Log New Defect</a>
+        <a href="./defects.html">View All Defects</a>
+        <a href="./dashboard.html">Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <section id="defectLog">
+            <div class="tab-navigation">
+                <button type="button" class="tab-btn active" data-tab="all-defects">All Defects</button>
+                <button type="button" class="tab-btn" data-tab="repeating-defects">Repeating Defects</button>
+            </div>
+
+            <div id="all-defects-tab" class="tab-content active">
+                <div id="defectSummary">
+                    <div class="total-count">Total Defects: <span id="totalDefectsCount">0</span></div>
+                    <div class="active-count">Active Defects: <span id="activeDefectsCount">0</span></div>
+                    <div class="fixed-count">Fixed Defects: <span id="fixedDefectsCount">0</span></div>
+                </div>
+
+                <section id="filterAndSortSection">
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="searchFleetNumber">Fleet Number:</label>
+                            <input type="text" id="searchFleetNumber" placeholder="e.g., 12345">
+                        </div>
+                        <div class="filter-group">
+                            <label for="statusSelect">Status:</label>
+                            <select id="statusSelect">
+                                <option value="all">All</option>
+                                <option value="unfixed">Outstanding</option>
+                                <option value="fixed">Fixed</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="fromDayInput">From Date:</label>
+                            <input type="date" id="fromDayInput">
+                        </div>
+                        <div class="filter-group">
+                            <label for="toDayInput">To Date:</label>
+                            <input type="date" id="toDayInput">
+                        </div>
+                        <div class="filter-group">
+                            <label for="sortBySelect">Sort By:</label>
+                            <select id="sortBySelect">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="fleetAsc">Fleet Number (Low to High)</option>
+                                <option value="fleetDesc">Fleet Number (High to Low)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button id="applyFiltersBtn">Apply Filters</button>
+                        <button id="clearAllFiltersBtn">Clear Filters</button>
+                        <button id="downloadXlsxBtn">Download Excel</button>
+                    </div>
+                </section>
+
+                <div id="defectsList">
+                    <p>Loading defects...</p>
+                </div>
+            </div>
+
+            <div id="repeating-defects-tab" class="tab-content">
+                <section class="repeat-summary">
+                    <div class="total-count">Repeat Groups: <span id="repeatingGroupsCount">0</span></div>
+                    <div class="active-count">Active Repeat Groups: <span id="activeRepeatingGroupsCount">0</span></div>
+                    <div class="fixed-count">Affected Fleets: <span id="repeatingFleetCount">0</span></div>
+                </section>
+
+                <section class="repeat-filters-section">
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="repeatingFleetFilter">Fleet Number:</label>
+                            <input type="text" id="repeatingFleetFilter" placeholder="e.g., 12345">
+                        </div>
+                        <div class="filter-group">
+                            <label for="repeatingStatusFilter">Status:</label>
+                            <select id="repeatingStatusFilter">
+                                <option value="all">All</option>
+                                <option value="unfixed">Has Outstanding Defect</option>
+                                <option value="fixed">Latest Logged as Fixed</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="minOccurrencesFilter">Minimum Occurrences:</label>
+                            <input type="number" id="minOccurrencesFilter" min="2" value="2">
+                        </div>
+                        <div class="filter-group">
+                            <label for="similarityThreshold">Similarity Threshold: <span id="similarityValue">80%</span></label>
+                            <input type="range" id="similarityThreshold" min="50" max="100" value="80">
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button id="clearRepeatingFiltersBtn">Clear Repeat Filters</button>
+                        <button id="downloadRepeatingReportBtn">Download Repeat Report</button>
+                    </div>
+                </section>
+
+                <div id="repeatingDefectsList">
+                    <p>Loading repeating defects...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Shared and page-specific scripts -->
+    <script src="./common.js"></script>
+    <script src="./defects.js"></script>
+</body>
+</html>
