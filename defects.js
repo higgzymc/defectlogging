@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defectsListDiv = document.getElementById('defectsList');
     const repeatingDefectsListDiv = document.getElementById('repeatingDefectsList');
     const searchFleetNumberInput = document.getElementById('searchFleetNumber');
+    const searchDescriptionInput = document.getElementById('searchDescription');
     const statusSelect = document.getElementById('statusSelect');
     const sortBySelect = document.getElementById('sortBySelect');
     const fromDayInput = document.getElementById('fromDayInput');
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeDefectsCountSpan = document.getElementById('activeDefectsCount');
     const fixedDefectsCountSpan = document.getElementById('fixedDefectsCount');
     const repeatingFleetFilterInput = document.getElementById('repeatingFleetFilter');
+    const repeatingDescriptionFilterInput = document.getElementById('repeatingDescriptionFilter');
     const repeatingStatusFilterSelect = document.getElementById('repeatingStatusFilter');
     const minOccurrencesFilterInput = document.getElementById('minOccurrencesFilter');
     const similarityThresholdInput = document.getElementById('similarityThreshold');
@@ -22,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const repeatingGroupsCountSpan = document.getElementById('repeatingGroupsCount');
     const activeRepeatingGroupsCountSpan = document.getElementById('activeRepeatingGroupsCount');
     const repeatingFleetCountSpan = document.getElementById('repeatingFleetCount');
+    const allDefectsFilterSummary = document.getElementById('allDefectsFilterSummary');
+    const repeatingDefectsFilterSummary = document.getElementById('repeatingDefectsFilterSummary');
+    const quickFilterButtons = document.querySelectorAll('.quick-filter-btn');
 
     let currentAllDefects = [];
     let currentRepeatingGroups = [];
@@ -57,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCurrentFilters() {
         return {
             fleet: searchFleetNumberInput.value,
+            description: searchDescriptionInput.value,
             status: statusSelect.value,
             fromDay: fromDayInput.value,
             toDay: toDayInput.value,
@@ -67,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getCurrentRepeatingFilters() {
         return {
             fleet: repeatingFleetFilterInput.value,
+            description: repeatingDescriptionFilterInput.value,
             status: repeatingStatusFilterSelect.value,
             minOccurrences: parseInt(minOccurrencesFilterInput.value, 10) || 2,
             similarityThreshold: parseInt(similarityThresholdInput.value, 10) || 80
@@ -100,6 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 String(d.fleetNumber || '').toLowerCase().includes(filters.fleet.trim().toLowerCase())
             );
         }
+        if (filters.description.trim() !== '') {
+            defectsToRender = defectsToRender.filter(d =>
+                String(d.description || '').toLowerCase().includes(filters.description.trim().toLowerCase())
+            );
+        }
         if (filters.status !== 'all') {
             defectsToRender = defectsToRender.filter(d => {
                 if (filters.status === 'fixed') return d.isFixed;
@@ -128,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         defectsListDiv.innerHTML = '';
+        updateAllDefectsFilterSummary(filters, defectsToRender.length);
         if (defectsToRender.length === 0) {
             defectsListDiv.innerHTML = '<p>No defects found matching your criteria.</p>';
             return;
@@ -207,6 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 String(group.fleetNumber || '').toLowerCase().includes(filters.fleet.trim().toLowerCase())
             );
         }
+        if (filters.description.trim() !== '') {
+            repeatingGroups = repeatingGroups.filter(group =>
+                String(group.description || '').toLowerCase().includes(filters.description.trim().toLowerCase())
+            );
+        }
 
         if (filters.status !== 'all') {
             repeatingGroups = repeatingGroups.filter(group => {
@@ -226,6 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         repeatingDefectsListDiv.innerHTML = '';
+        updateRepeatingFilterSummary(filters, repeatingGroups.length);
         if (repeatingGroups.length === 0) {
             repeatingDefectsListDiv.innerHTML = '<p>No repeating defects found matching your criteria.</p>';
             return;
@@ -374,6 +393,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return 'N/A';
         return date.toLocaleString('en-GB');
+    }
+
+    function formatDateLabel(value) {
+        if (!value) return '';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString('en-GB');
+    }
+
+    function updateAllDefectsFilterSummary(filters, resultsCount) {
+        const parts = [];
+        if (filters.fleet.trim()) parts.push(`Fleet ${filters.fleet.trim()}`);
+        if (filters.description.trim()) parts.push(`Description "${filters.description.trim()}"`);
+        if (filters.status !== 'all') parts.push(filters.status === 'fixed' ? 'Fixed only' : 'Outstanding only');
+        if (filters.fromDay) parts.push(`From ${formatDateLabel(filters.fromDay)}`);
+        if (filters.toDay) parts.push(`To ${formatDateLabel(filters.toDay)}`);
+
+        allDefectsFilterSummary.textContent = parts.length > 0
+            ? `${resultsCount} result${resultsCount === 1 ? '' : 's'} | ${parts.join(' | ')}`
+            : `Showing all defects (${resultsCount})`;
+    }
+
+    function updateRepeatingFilterSummary(filters, resultsCount) {
+        const parts = [];
+        if (filters.fleet.trim()) parts.push(`Fleet ${filters.fleet.trim()}`);
+        if (filters.description.trim()) parts.push(`Pattern "${filters.description.trim()}"`);
+        if (filters.status !== 'all') parts.push(filters.status === 'fixed' ? 'Latest marked fixed' : 'Has outstanding defect');
+        if (filters.minOccurrences > 2) parts.push(`Min ${filters.minOccurrences} occurrences`);
+        parts.push(`Similarity ${filters.similarityThreshold}%`);
+
+        repeatingDefectsFilterSummary.textContent = `${resultsCount} repeat group${resultsCount === 1 ? '' : 's'} | ${parts.join(' | ')}`;
+    }
+
+    function setQuickDateRange(range) {
+        const today = new Date();
+        const formatForInput = (date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        if (range === 'clear') {
+            fromDayInput.value = '';
+            toDayInput.value = '';
+            renderDefects(getCurrentFilters());
+            return;
+        }
+
+        if (range === 'today') {
+            const todayValue = formatForInput(today);
+            fromDayInput.value = todayValue;
+            toDayInput.value = todayValue;
+            renderDefects(getCurrentFilters());
+            return;
+        }
+
+        const days = parseInt(range, 10);
+        if (!Number.isNaN(days)) {
+            const fromDate = new Date(today);
+            fromDate.setDate(today.getDate() - (days - 1));
+            fromDayInput.value = formatForInput(fromDate);
+            toDayInput.value = formatForInput(today);
+            renderDefects(getCurrentFilters());
+        }
     }
 
     function formatCommentsForReport(comments) {
@@ -567,8 +651,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     applyFiltersBtn.addEventListener('click', () => renderDefects(getCurrentFilters()));
     searchFleetNumberInput.addEventListener('input', () => renderDefects(getCurrentFilters()));
+    searchDescriptionInput.addEventListener('input', () => renderDefects(getCurrentFilters()));
+    statusSelect.addEventListener('change', () => renderDefects(getCurrentFilters()));
+    fromDayInput.addEventListener('change', () => renderDefects(getCurrentFilters()));
+    toDayInput.addEventListener('change', () => renderDefects(getCurrentFilters()));
+    sortBySelect.addEventListener('change', () => renderDefects(getCurrentFilters()));
     clearAllFiltersBtn.addEventListener('click', () => {
         searchFleetNumberInput.value = '';
+        searchDescriptionInput.value = '';
         statusSelect.value = 'all';
         fromDayInput.value = '';
         toDayInput.value = '';
@@ -593,16 +683,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     repeatingFleetFilterInput.addEventListener('input', () => renderRepeatingDefects(getCurrentRepeatingFilters()));
+    repeatingDescriptionFilterInput.addEventListener('input', () => renderRepeatingDefects(getCurrentRepeatingFilters()));
     repeatingStatusFilterSelect.addEventListener('change', () => renderRepeatingDefects(getCurrentRepeatingFilters()));
-    minOccurrencesFilterInput.addEventListener('change', () => renderRepeatingDefects(getCurrentRepeatingFilters()));
+    minOccurrencesFilterInput.addEventListener('input', () => renderRepeatingDefects(getCurrentRepeatingFilters()));
 
     clearRepeatingFiltersBtn.addEventListener('click', () => {
         repeatingFleetFilterInput.value = '';
+        repeatingDescriptionFilterInput.value = '';
         repeatingStatusFilterSelect.value = 'all';
         minOccurrencesFilterInput.value = '2';
         similarityThresholdInput.value = '80';
         similarityValueSpan.textContent = '80%';
         updateDisplay();
+    });
+
+    quickFilterButtons.forEach(button => {
+        button.addEventListener('click', () => setQuickDateRange(button.dataset.range));
     });
 
     downloadRepeatingReportBtn.addEventListener('click', generateRepeatingDefectsReport);
@@ -615,6 +711,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (filters.fleet.trim() !== '') {
                 defectsToExport = defectsToExport.filter(d =>
                     String(d.fleetNumber || '').toLowerCase().includes(filters.fleet.trim().toLowerCase())
+                );
+            }
+            if (filters.description.trim() !== '') {
+                defectsToExport = defectsToExport.filter(d =>
+                    String(d.description || '').toLowerCase().includes(filters.description.trim().toLowerCase())
                 );
             }
             if (filters.status !== 'all') {

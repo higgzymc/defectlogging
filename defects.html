@@ -41,10 +41,30 @@
                 </div>
 
                 <section id="filterAndSortSection">
+                    <div class="filter-panel-header">
+                        <div>
+                            <h3>Filter Logged Defects</h3>
+                            <p>Search, narrow down, and sort defects instantly.</p>
+                        </div>
+                        <div id="allDefectsFilterSummary" class="filter-summary">Showing all defects</div>
+                    </div>
+
+                    <div class="quick-filter-row">
+                        <span class="quick-filter-label">Quick dates:</span>
+                        <button type="button" class="quick-filter-btn" data-range="today">Today</button>
+                        <button type="button" class="quick-filter-btn" data-range="7">Last 7 Days</button>
+                        <button type="button" class="quick-filter-btn" data-range="30">Last 30 Days</button>
+                        <button type="button" class="quick-filter-btn" data-range="clear">All Dates</button>
+                    </div>
+
                     <div class="filter-controls">
                         <div class="filter-group">
                             <label for="searchFleetNumber">Fleet Number:</label>
                             <input type="text" id="searchFleetNumber" placeholder="e.g., 12345">
+                        </div>
+                        <div class="filter-group">
+                            <label for="searchDescription">Description:</label>
+                            <input type="text" id="searchDescription" placeholder="Search description text">
                         </div>
                         <div class="filter-group">
                             <label for="statusSelect">Status:</label>
@@ -73,7 +93,7 @@
                         </div>
                     </div>
                     <div class="filter-actions">
-                        <button id="applyFiltersBtn">Apply Filters</button>
+                        <button id="applyFiltersBtn">Refresh Results</button>
                         <button id="clearAllFiltersBtn">Clear Filters</button>
                         <button id="downloadXlsxBtn">Download Excel</button>
                     </div>
@@ -92,10 +112,22 @@
                 </section>
 
                 <section class="repeat-filters-section">
+                    <div class="filter-panel-header">
+                        <div>
+                            <h3>Filter Repeating Defects</h3>
+                            <p>Focus on the repeat patterns that still need attention.</p>
+                        </div>
+                        <div id="repeatingDefectsFilterSummary" class="filter-summary">Showing all repeat groups</div>
+                    </div>
+
                     <div class="filter-controls">
                         <div class="filter-group">
                             <label for="repeatingFleetFilter">Fleet Number:</label>
                             <input type="text" id="repeatingFleetFilter" placeholder="e.g., 12345">
+                        </div>
+                        <div class="filter-group">
+                            <label for="repeatingDescriptionFilter">Description:</label>
+                            <input type="text" id="repeatingDescriptionFilter" placeholder="Search repeat pattern text">
                         </div>
                         <div class="filter-group">
                             <label for="repeatingStatusFilter">Status:</label>
