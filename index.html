@@ -40,7 +40,26 @@
         <section id="inputForm">
             <h2>Log New Defect</h2>
             <label for="fleetNumber">Fleet Number:</label>
-            <input type="text" id="fleetNumber" placeholder="e.g., 12345" required>
+            <input type="text" id="fleetNumber" list="fleetNumberOptions" inputmode="numeric" autocomplete="off" placeholder="e.g., 2005" required>
+            <datalist id="fleetNumberOptions"></datalist>
+            <div id="selectedVehicleType" class="vehicle-type-display">Vehicle type will appear after choosing a fleet number.</div>
+            <div id="fleetNumberError" class="field-error" aria-live="polite"></div>
+
+            <details class="add-fleet-panel">
+                <summary>Add missing fleet number</summary>
+                <div class="add-fleet-grid">
+                    <div>
+                        <label for="newFleetNumber">Fleet Number:</label>
+                        <input type="text" id="newFleetNumber" inputmode="numeric" autocomplete="off" placeholder="e.g., 3001">
+                    </div>
+                    <div>
+                        <label for="newFleetType">Vehicle Type:</label>
+                        <input type="text" id="newFleetType" autocomplete="off" placeholder="e.g., ADL Enviro200">
+                    </div>
+                </div>
+                <button type="button" id="addFleetVehicleBtn">Add Fleet Number</button>
+                <div id="addFleetVehicleStatus" class="form-status" aria-live="polite"></div>
+            </details>
 
             <label for="defectDescription">Defect Description:</label>
             <textarea id="defectDescription" rows="4" placeholder="e.g., Engine misfire, broken mirror" required></textarea>
@@ -61,6 +80,7 @@
     
     <!-- Shared and page-specific scripts -->
     <script src="./common.js"></script>
+    <script src="./fleetNumbers.js"></script>
     <script src="./index.js"></script>
 </body>
 </html>

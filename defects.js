@@ -45,8 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async user => {
         if (user) {
+            await loadCustomFleetVehicles();
             initializeFirestoreListener();
         }
     });
@@ -160,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const loggedByName = userDisplayNames[defect.loggedInUser] || 'Loading...';
+            const busType = getDefectBusType(defect);
             const statusText = defect.isFixed ? 'Fixed' : 'Outstanding';
             const deleteButtonHtml = isAdmin ? `<button class="delete-btn" data-id="${defect.id}">Delete</button>` : '';
             const markFixedButtonHtml = !defect.isFixed ? `<button class="mark-fixed-btn" data-id="${defect.id}">Mark as Fixed</button>` : '';
@@ -184,8 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             defectItem.innerHTML = `
-                <p><strong>Fleet Number:</strong> ${defect.fleetNumber}</p>
-                <p><strong>Defect:</strong> ${defect.description}</p>
+                <p><strong>Fleet Number:</strong> ${escapeHtml(defect.fleetNumber || 'N/A')}</p>
+                <p><strong>Vehicle Type:</strong> ${escapeHtml(busType || 'Unknown')}</p>
+                <p><strong>Defect:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
                 <p><strong>Logged By:</strong> ${loggedByName}</p>
                 <p><strong>Logged On:</strong> ${new Date(defect.timestamp).toLocaleString()}</p>
                 <p><strong>Status:</strong> ${statusText}</p>
@@ -256,8 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const header = document.createElement('div');
             header.classList.add('repeating-group-header');
+            const groupBusType = getVehicleTypeForFleetNumber(group.fleetNumber);
             header.innerHTML = `
                 <h3>Fleet ${group.fleetNumber} - ${group.count} similar issues</h3>
+                <p><strong>Vehicle Type:</strong> ${escapeHtml(groupBusType || 'Unknown')}</p>
                 <p><strong>Pattern:</strong> ${escapeHtml(group.description || 'N/A')}</p>
                 <p><strong>Similarity:</strong> ${group.similarity}%</p>
                 <p><strong>Latest status:</strong> ${group.latestStatusIsFixed ? 'Fixed' : 'Outstanding'}</p>
@@ -482,6 +487,10 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#39;');
     }
 
+    function getDefectBusType(defect) {
+        return defect.busType || getVehicleTypeForFleetNumber(defect.fleetNumber);
+    }
+
     async function generateRepeatingDefectsReport() {
         if (!window.jspdf || !window.jspdf.jsPDF) {
             alert('The PDF library did not load, so the report cannot be downloaded right now.');
@@ -542,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const summaryRows = repeatingGroups.map(group => [
             `Fleet ${group.fleetNumber}`,
+            getVehicleTypeForFleetNumber(group.fleetNumber) || 'Unknown',
             group.count,
             group.latestStatusIsFixed ? 'Fixed' : 'Outstanding',
             formatDateTimeValue(group.latestDefect?.timestamp),
@@ -550,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         doc.autoTable({
             startY: yPosition,
-            head: [['Fleet', 'Occurrences', 'Latest Status', 'Last Logged', 'Pattern']],
+            head: [['Fleet', 'Vehicle Type', 'Occurrences', 'Latest Status', 'Last Logged', 'Pattern']],
             body: summaryRows,
             theme: 'grid',
             headStyles: { fillColor: primaryColor, textColor: 255 },
@@ -572,6 +582,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             doc.setFontSize(10);
             doc.setTextColor(...textColor);
+            doc.text(`Vehicle Type: ${getVehicleTypeForFleetNumber(group.fleetNumber) || 'Unknown'}`, 20, yPosition);
+            yPosition += 6;
             doc.text(`Pattern: ${group.description}`, 20, yPosition);
             yPosition += 6;
             doc.text(`Occurrences: ${group.count} | Similarity: ${group.similarity}%`, 20, yPosition);
@@ -736,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const dataForSheet = [];
-            const headers = ['Priority', 'Fleet Number', 'Defect Description', 'Logged On', 'Logged By', 'Status', 'Comments', 'Image URLs'];
+            const headers = ['Priority', 'Fleet Number', 'Vehicle Type', 'Defect Description', 'Logged On', 'Logged By', 'Status', 'Comments', 'Image URLs'];
             dataForSheet.push(headers);
 
             const rowsPromises = defectsToExport.map(async defect => {
@@ -749,6 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return [
                     defect.isFixed ? 2 : 1,
                     defect.fleetNumber,
+                    getDefectBusType(defect) || 'Unknown',
                     defect.description,
                     new Date(defect.timestamp).toLocaleString(),
                     loggedByDisplayName,
@@ -763,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const ws = XLSX.utils.aoa_to_sheet(dataForSheet);
             ws['!cols'] = [
-                { wch: 10 }, { wch: 15 }, { wch: 40 }, { wch: 20 }, { wch: 20 },
+                { wch: 10 }, { wch: 15 }, { wch: 28 }, { wch: 40 }, { wch: 20 }, { wch: 20 },
                 { wch: 10 }, { wch: 50 }, { wch: 50 }
             ];
 
