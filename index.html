@@ -23,6 +23,7 @@
         <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
         <a href="./index.html">Log New Defect</a>
         <a href="./defects.html">View All Defects</a>
+        <a href="./categories.html">Categories</a>
         <a href="./dashboard.html">Dashboard</a>
     </nav>
     <div style="padding: 20px; text-align: center; background-color: #e9ecef; border-radius: 8px; margin: 20px auto; max-width: 900px;">
@@ -39,6 +40,10 @@
         
         <section id="inputForm">
             <h2>Log New Defect</h2>
+            <div class="form-intro-panel">
+                <h3>Vehicle Details</h3>
+                <p>Start by choosing the vehicle, then narrow the defect down by area and subcategory before writing the fault.</p>
+            </div>
             <label for="fleetNumber">Fleet Number:</label>
             <input type="text" id="fleetNumber" list="fleetNumberOptions" inputmode="numeric" autocomplete="off" placeholder="e.g., 2005" required>
             <datalist id="fleetNumberOptions"></datalist>
@@ -61,6 +66,28 @@
                 <div id="addFleetVehicleStatus" class="form-status" aria-live="polite"></div>
             </details>
 
+            <div class="form-intro-panel compact-panel">
+                <h3>Defect Location</h3>
+                <p>Pick the main vehicle area first, then the more specific defect location.</p>
+            </div>
+            <div class="category-picker-grid">
+                <div>
+                    <label for="selectAreaBtn">Defect Area:</label>
+                    <button type="button" id="selectAreaBtn" class="picker-btn">Choose defect area</button>
+                    <div id="selectedAreaDisplay" class="selection-display">No area selected yet.</div>
+                </div>
+                <div>
+                    <label for="selectSubcategoryBtn">Subcategory:</label>
+                    <button type="button" id="selectSubcategoryBtn" class="picker-btn" disabled>Choose subcategory</button>
+                    <div id="selectedSubcategoryDisplay" class="selection-display">Choose an area first.</div>
+                </div>
+            </div>
+            <div id="categoryError" class="field-error" aria-live="polite"></div>
+
+            <div class="form-intro-panel compact-panel">
+                <h3>Fault Details</h3>
+                <p>Add the written description and any supporting photos.</p>
+            </div>
             <label for="defectDescription">Defect Description:</label>
             <textarea id="defectDescription" rows="4" placeholder="e.g., Engine misfire, broken mirror" required></textarea>
 
@@ -73,6 +100,18 @@
         </section>
     </div>
 
+    <div id="pickerModal" class="picker-modal" hidden>
+        <div class="picker-modal-backdrop" data-close-picker="true"></div>
+        <div class="picker-modal-card" role="dialog" aria-modal="true" aria-labelledby="pickerModalTitle">
+            <div class="picker-modal-header">
+                <h3 id="pickerModalTitle">Choose an option</h3>
+                <button type="button" id="closePickerModalBtn" class="picker-close-btn" aria-label="Close selector">&times;</button>
+            </div>
+            <p id="pickerModalDescription" class="picker-modal-description"></p>
+            <div id="pickerModalOptions" class="picker-options"></div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -81,6 +120,7 @@
     <!-- Shared and page-specific scripts -->
     <script src="./common.js"></script>
     <script src="./fleetNumbers.js"></script>
+    <script src="./defectCategories.js"></script>
     <script src="./index.js"></script>
 </body>
 </html>

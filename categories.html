@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - Bus Defect Logger</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <button id="menuBtn" class="menu-btn">&#9776;</button>
+            <h1 class="header-title">Defect Categories</h1>
+            <div id="loggedInUserDisplay">
+                Logged in as: <span id="currentUserName"></span>
+                <button id="logoutBtn">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
+        <a href="./index.html">Log New Defect</a>
+        <a href="./defects.html">View All Defects</a>
+        <a href="./categories.html">Categories</a>
+        <a href="./dashboard.html">Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <section class="categories-shell">
+            <div class="categories-panel">
+                <h2>Add New Category</h2>
+                <label for="newCategoryName">Category Name:</label>
+                <input type="text" id="newCategoryName" placeholder="e.g., Electrical">
+
+                <label for="newCategorySubcategories">Subcategories:</label>
+                <textarea id="newCategorySubcategories" rows="4" placeholder="Comma-separated list, e.g., Wiring, Battery, Alternator"></textarea>
+
+                <button type="button" id="saveCategoryBtn">Save Category</button>
+                <div id="saveCategoryStatus" class="form-status" aria-live="polite"></div>
+            </div>
+
+            <div class="categories-panel">
+                <h2>Add Subcategory</h2>
+                <label for="existingCategorySelect">Category:</label>
+                <select id="existingCategorySelect"></select>
+
+                <label for="newSubcategoryName">Subcategory Name:</label>
+                <input type="text" id="newSubcategoryName" placeholder="e.g., Wiring">
+
+                <button type="button" id="saveSubcategoryBtn">Add Subcategory</button>
+                <div id="saveSubcategoryStatus" class="form-status" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <section class="categories-list-panel">
+            <div class="filter-panel-header">
+                <div>
+                    <h3>Current Categories</h3>
+                    <p>These feed straight into the web app and Android app defect forms.</p>
+                </div>
+            </div>
+            <div id="categoriesList" class="categories-list">
+                <p>Loading categories...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+    <script src="./common.js"></script>
+    <script src="./defectCategories.js"></script>
+    <script src="./categories.js"></script>
+</body>
+</html>

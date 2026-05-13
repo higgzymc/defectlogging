@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     auth.onAuthStateChanged(async user => {
         if (user) {
-            await loadCustomFleetVehicles();
+            await Promise.all([loadCustomFleetVehicles(), loadDefectCategories()]);
             initializeFirestoreListener();
         }
     });
@@ -79,6 +79,31 @@ document.addEventListener('DOMContentLoaded', () => {
             minOccurrences: parseInt(minOccurrencesFilterInput.value, 10) || 2,
             similarityThreshold: parseInt(similarityThresholdInput.value, 10) || 80
         };
+    }
+
+    function buildAreaLabel(defect) {
+        const parts = [defect.locationArea, defect.subcategory].map(value => String(value || '').trim()).filter(Boolean);
+        return parts.length > 0 ? parts.join(' / ') : 'Not set';
+    }
+
+    function buildAreaBadgeHtml(defect) {
+        const area = String(defect.locationArea || '').trim();
+        const subcategory = String(defect.subcategory || '').trim();
+        if (!area && !subcategory) {
+            return '<span class="detail-chip muted-chip">Area not set</span>';
+        }
+
+        const chips = [];
+        if (area) chips.push(`<span class="detail-chip">${escapeHtml(area)}</span>`);
+        if (subcategory) chips.push(`<span class="detail-chip subtle-chip">${escapeHtml(subcategory)}</span>`);
+        return chips.join('');
+    }
+
+    function defectPatternText(defect) {
+        return [defect.locationArea, defect.subcategory, defect.description]
+            .map(value => String(value || '').trim())
+            .filter(Boolean)
+            .join(' - ');
     }
 
     function updateDisplay() {
@@ -186,12 +211,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             defectItem.innerHTML = `
-                <p><strong>Fleet Number:</strong> ${escapeHtml(defect.fleetNumber || 'N/A')}</p>
-                <p><strong>Vehicle Type:</strong> ${escapeHtml(busType || 'Unknown')}</p>
+                <div class="defect-card-topline">
+                    <div>
+                        <div class="defect-card-title">Fleet ${escapeHtml(defect.fleetNumber || 'N/A')}</div>
+                        <div class="defect-card-subtitle">${escapeHtml(busType || 'Unknown')}</div>
+                    </div>
+                    <div class="defect-card-status ${defect.isFixed ? 'status-fixed' : 'status-open'}">${statusText}</div>
+                </div>
+                <div class="detail-chip-row">
+                    ${buildAreaBadgeHtml(defect)}
+                </div>
                 <p><strong>Defect:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
                 <p><strong>Logged By:</strong> ${loggedByName}</p>
                 <p><strong>Logged On:</strong> ${new Date(defect.timestamp).toLocaleString()}</p>
-                <p><strong>Status:</strong> ${statusText}</p>
                 ${imagesHtml}
                 <div class="comments-container">
                     ${commentsHtml}
@@ -260,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const header = document.createElement('div');
             header.classList.add('repeating-group-header');
             const groupBusType = getVehicleTypeForFleetNumber(group.fleetNumber);
-            header.innerHTML = `
+                header.innerHTML = `
                 <h3>Fleet ${group.fleetNumber} - ${group.count} similar issues</h3>
                 <p><strong>Vehicle Type:</strong> ${escapeHtml(groupBusType || 'Unknown')}</p>
                 <p><strong>Pattern:</strong> ${escapeHtml(group.description || 'N/A')}</p>
@@ -282,6 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const commentSummary = formatCommentsForReport(defect.comments);
                 defectItem.innerHTML = `
+                    <div class="detail-chip-row">
+                        ${buildAreaBadgeHtml(defect)}
+                    </div>
                     <p><strong>Description:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
                     <p><strong>Status:</strong> ${defect.isFixed ? 'Fixed' : 'Outstanding'}</p>
                     <p><strong>Logged By:</strong> ${escapeHtml(userDisplayNames[defect.loggedInUser] || 'Unknown')}</p>
@@ -355,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fleetDefects.forEach(defect => {
                 let matchedCluster = null;
                 for (const cluster of clusters) {
-                    const similarity = calculateSimilarity(defect.description || '', cluster[0].description || '');
+                    const similarity = calculateSimilarity(defectPatternText(defect), defectPatternText(cluster[0]));
                     if (similarity >= similarityThreshold) {
                         matchedCluster = cluster;
                         break;
@@ -381,8 +416,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     fleetNumber,
                     count: sortedCluster.length,
                     defects: sortedCluster,
-                    description: sortedCluster[0].description || '',
-                    similarity: calculateSimilarity(sortedCluster[0].description || '', sortedCluster[1]?.description || ''),
+                    description: defectPatternText(sortedCluster[0]),
+                    similarity: calculateSimilarity(defectPatternText(sortedCluster[0]), defectPatternText(sortedCluster[1] || {})),
                     hasOutstandingDefect,
                     latestStatusIsFixed: latestDefect ? !!latestDefect.isFixed : false,
                     latestDefect
@@ -549,14 +584,14 @@ document.addEventListener('DOMContentLoaded', () => {
         doc.text(`Similarity threshold: ${filters.similarityThreshold}%`, 20, yPosition);
         yPosition += 10;
 
-        const summaryRows = repeatingGroups.map(group => [
-            `Fleet ${group.fleetNumber}`,
-            getVehicleTypeForFleetNumber(group.fleetNumber) || 'Unknown',
-            group.count,
-            group.latestStatusIsFixed ? 'Fixed' : 'Outstanding',
-            formatDateTimeValue(group.latestDefect?.timestamp),
-            group.description.length > 45 ? `${group.description.slice(0, 45)}...` : group.description
-        ]);
+            const summaryRows = repeatingGroups.map(group => [
+                `Fleet ${group.fleetNumber}`,
+                getVehicleTypeForFleetNumber(group.fleetNumber) || 'Unknown',
+                group.count,
+                group.latestStatusIsFixed ? 'Fixed' : 'Outstanding',
+                formatDateTimeValue(group.latestDefect?.timestamp),
+                group.description.length > 45 ? `${group.description.slice(0, 45)}...` : group.description
+            ]);
 
         doc.autoTable({
             startY: yPosition,
@@ -593,12 +628,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 formatDateTimeValue(defect.timestamp),
                 defect.isFixed ? 'Fixed' : 'Outstanding',
                 userDisplayNames[defect.loggedInUser] || 'Unknown',
+                buildAreaLabel(defect),
                 formatCommentsForReport(defect.comments)
             ]);
 
             doc.autoTable({
                 startY: yPosition,
-                head: [['Logged On', 'Status', 'Logged By', 'Comments']],
+                head: [['Logged On', 'Status', 'Logged By', 'Area', 'Comments']],
                 body: defectRows,
                 theme: 'striped',
                 headStyles: { fillColor: [149, 165, 166], textColor: 255 },
@@ -606,8 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 columnStyles: {
                     0: { cellWidth: 34 },
                     1: { cellWidth: 22 },
-                    2: { cellWidth: 34 },
-                    3: { cellWidth: 95 }
+                    2: { cellWidth: 28 },
+                    3: { cellWidth: 32 },
+                    4: { cellWidth: 67 }
                 }
             });
 
@@ -748,7 +785,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const dataForSheet = [];
-            const headers = ['Priority', 'Fleet Number', 'Vehicle Type', 'Defect Description', 'Logged On', 'Logged By', 'Status', 'Comments', 'Image URLs'];
+            const headers = ['Priority', 'Fleet Number', 'Vehicle Type', 'Defect Area', 'Defect Subcategory', 'Defect Description', 'Logged On', 'Logged By', 'Status', 'Comments', 'Image URLs'];
             dataForSheet.push(headers);
 
             const rowsPromises = defectsToExport.map(async defect => {
@@ -762,6 +799,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     defect.isFixed ? 2 : 1,
                     defect.fleetNumber,
                     getDefectBusType(defect) || 'Unknown',
+                    defect.locationArea || 'Not set',
+                    defect.subcategory || 'Not set',
                     defect.description,
                     new Date(defect.timestamp).toLocaleString(),
                     loggedByDisplayName,
@@ -776,7 +815,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const ws = XLSX.utils.aoa_to_sheet(dataForSheet);
             ws['!cols'] = [
-                { wch: 10 }, { wch: 15 }, { wch: 28 }, { wch: 40 }, { wch: 20 }, { wch: 20 },
+                { wch: 10 }, { wch: 15 }, { wch: 28 }, { wch: 18 }, { wch: 22 }, { wch: 40 }, { wch: 20 }, { wch: 20 },
                 { wch: 10 }, { wch: 50 }, { wch: 50 }
             ];
 
