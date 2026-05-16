@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const driverRepeatingFleetCount = document.getElementById('driverRepeatingFleetCount');
     const driverRepeatThreshold = document.getElementById('driverRepeatThreshold');
     const driverRepeatThresholdValue = document.getElementById('driverRepeatThresholdValue');
+    const driverGuidanceModal = document.getElementById('driverGuidanceModal');
+    const driverGuidanceContent = document.getElementById('driverGuidanceContent');
+    const closeDriverGuidanceBtn = document.getElementById('closeDriverGuidanceBtn');
+    const driverGuidanceCancelBtn = document.getElementById('driverGuidanceCancelBtn');
+    const driverGuidanceConfirmBtn = document.getElementById('driverGuidanceConfirmBtn');
 
     let selectedArea = '';
     let selectedSubcategory = '';
@@ -53,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAllDefects = [];
     let currentRepeatingGroups = [];
     let userDisplayNames = {};
+    let pendingGuidanceAction = null;
 
     const DriverAccessState = window.DriverAccessState || {
         ALLOWED: 'allowed',
@@ -264,32 +270,43 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        driverSubmitBtn.disabled = true;
-        setFormStatus('Submitting defect for approval...', 'info');
+        const vehicleType = getVehicleTypeForFleetNumber(fleetNumber);
+        const guidance = buildClientDvsaGuidance({
+            fleetNumber,
+            busType: vehicleType,
+            locationArea: selectedArea,
+            subcategory: selectedSubcategory,
+            description
+        });
 
-        try {
-            const imageUrls = await uploadImages();
-            const vehicleType = getVehicleTypeForFleetNumber(fleetNumber);
-            await driverDb.collection('pendingDefects').add({
-                fleetNumber,
-                busType: vehicleType,
-                locationArea: selectedArea,
-                subcategory: selectedSubcategory,
-                description,
-                timestamp: new Date().toISOString(),
-                imageUrls,
-                submittedByUid: activeUser.uid,
-                submittedByName: activeUser.displayName || activeUser.email || 'Unknown'
-            });
+        openDriverGuidanceModal(guidance, async () => {
+            closeDriverGuidanceModal();
+            driverSubmitBtn.disabled = true;
+            setFormStatus('Submitting defect for approval...', 'info');
 
-            resetForm();
-            setFormStatus('Defect submitted for approval.', 'success');
-        } catch (error) {
-            console.error('Could not submit pending defect:', error);
-            setFormStatus(error.message || 'Could not submit the defect right now.', 'error');
-        } finally {
-            driverSubmitBtn.disabled = false;
-        }
+            try {
+                const imageUrls = await uploadImages();
+                await driverDb.collection('pendingDefects').add({
+                    fleetNumber,
+                    busType: vehicleType,
+                    locationArea: selectedArea,
+                    subcategory: selectedSubcategory,
+                    description,
+                    timestamp: new Date().toISOString(),
+                    imageUrls,
+                    submittedByUid: activeUser.uid,
+                    submittedByName: activeUser.displayName || activeUser.email || 'Unknown'
+                });
+
+                resetForm();
+                setFormStatus('Defect submitted for approval.', 'success');
+            } catch (error) {
+                console.error('Could not submit pending defect:', error);
+                setFormStatus(error.message || 'Could not submit the defect right now.', 'error');
+            } finally {
+                driverSubmitBtn.disabled = false;
+            }
+        });
     }
 
     function defectPatternText(defect) {
@@ -426,6 +443,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="dvsa-guidance-disclaimer">${escapeHtml(guidance.disclaimer || 'Guidance only. Final decision rests with engineering or management.')}</p>
             </div>
         `;
+    }
+
+    function openDriverGuidanceModal(guidance, onConfirm) {
+        driverGuidanceContent.innerHTML = buildDvsaGuidanceHtml(guidance);
+        pendingGuidanceAction = onConfirm || null;
+        driverGuidanceModal.hidden = false;
+    }
+
+    function closeDriverGuidanceModal() {
+        driverGuidanceModal.hidden = true;
+        driverGuidanceContent.innerHTML = '';
+        pendingGuidanceAction = null;
     }
 
     function formatCommentsHtml(comments) {
@@ -712,6 +741,21 @@ document.addEventListener('DOMContentLoaded', () => {
     driverPickerModal.addEventListener('click', (event) => {
         if (event.target.dataset.closeDriverPicker === 'true') {
             closePickerModal();
+        }
+    });
+    closeDriverGuidanceBtn.addEventListener('click', closeDriverGuidanceModal);
+    driverGuidanceCancelBtn.addEventListener('click', closeDriverGuidanceModal);
+    driverGuidanceConfirmBtn.addEventListener('click', () => {
+        const action = pendingGuidanceAction;
+        if (action) {
+            action();
+        } else {
+            closeDriverGuidanceModal();
+        }
+    });
+    driverGuidanceModal.addEventListener('click', (event) => {
+        if (event.target.dataset.closeDriverGuidance === 'true') {
+            closeDriverGuidanceModal();
         }
     });
 

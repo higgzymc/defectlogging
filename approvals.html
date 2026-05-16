@@ -74,6 +74,22 @@
         </section>
     </div>
 
+    <div id="approvalGuidanceModal" class="picker-modal" hidden>
+        <div class="picker-modal-backdrop" data-close-approval-guidance="true"></div>
+        <div class="picker-modal-card" role="dialog" aria-modal="true" aria-labelledby="approvalGuidanceTitle">
+            <div class="picker-modal-header">
+                <h3 id="approvalGuidanceTitle">DVSA Guidance</h3>
+                <button type="button" id="closeApprovalGuidanceBtn" class="picker-close-btn" aria-label="Close guidance">&times;</button>
+            </div>
+            <div class="guidance-modal-body">
+                <div id="approvalGuidanceContent"></div>
+            </div>
+            <div class="guidance-modal-actions single-action">
+                <button type="button" id="approvalGuidanceDoneBtn" class="driver-primary-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -81,6 +97,7 @@
 
     <script src="./common.js"></script>
     <script src="./fleetNumbers.js"></script>
+    <script src="./dvsaClientGuidance.js"></script>
     <script src="./approvals.js"></script>
 </body>
 </html>

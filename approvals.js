@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const pendingDefectsCount = document.getElementById('pendingDefectsCount');
     const pendingFleetCount = document.getElementById('pendingFleetCount');
     const pendingUsersCount = document.getElementById('pendingUsersCount');
+    const approvalGuidanceModal = document.getElementById('approvalGuidanceModal');
+    const approvalGuidanceContent = document.getElementById('approvalGuidanceContent');
+    const closeApprovalGuidanceBtn = document.getElementById('closeApprovalGuidanceBtn');
+    const approvalGuidanceDoneBtn = document.getElementById('approvalGuidanceDoneBtn');
 
     let currentPendingDefects = [];
     let currentPendingUsers = [];
@@ -76,6 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
+    function openApprovalGuidanceModal(defect) {
+        const guidance = defect.dvsaGuidance || buildClientDvsaGuidance(defect);
+        approvalGuidanceContent.innerHTML = buildDvsaGuidanceHtml(guidance);
+        approvalGuidanceModal.hidden = false;
+    }
+
+    function closeApprovalGuidanceModal() {
+        approvalGuidanceModal.hidden = true;
+        approvalGuidanceContent.innerHTML = '';
+    }
+
     function updateStats() {
         pendingDefectsCount.textContent = String(currentPendingDefects.length);
         pendingFleetCount.textContent = String(new Set(currentPendingDefects.map((defect) => String(defect.fleetNumber || ''))).size);
@@ -114,10 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="detail-chip muted-chip">Submitted by ${escapeHtml(defect.submittedByName || 'Unknown')}</span>
                 </div>
                 <p><strong>Defect:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
-                ${buildDvsaGuidanceHtml(defect.dvsaGuidance)}
                 <p><strong>Submitted On:</strong> ${formatDateTimeValue(defect.timestamp)}</p>
                 ${imagesHtml}
                 <div class="actions">
+                    <button class="guidance-btn" data-id="${defect.id}">DVSA Guidance</button>
                     <button class="approve-btn" data-id="${defect.id}">Approve Defect</button>
                     <button class="delete-btn" data-id="${defect.id}">Reject / Delete</button>
                 </div>
@@ -171,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const approvedRef = db.collection('defects').doc();
         const pendingRef = db.collection('pendingDefects').doc(defectId);
 
+        const guidance = pending.dvsaGuidance || buildClientDvsaGuidance(pending);
         await db.runBatch((batch) => {
             batch.set(approvedRef, {
                 fleetNumber: pending.fleetNumber,
@@ -184,6 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 userName: approverName,
                 comments: [approvalComment],
                 imageUrls: Array.isArray(pending.imageUrls) ? pending.imageUrls : [],
+                dvsaGuidance: guidance,
+                priority: guidance.priority,
+                dvsaSeverity: guidance.severity,
                 reportedByUid: pending.submittedByUid || '',
                 reportedByName: pending.submittedByName || '',
                 approvedByUid: currentAdminUser.uid,
@@ -231,6 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!defectId) return;
 
         try {
+            if (target.classList.contains('guidance-btn')) {
+                const defect = currentPendingDefects.find((item) => item.id === defectId);
+                if (defect) openApprovalGuidanceModal(defect);
+                return;
+            }
             if (target.classList.contains('approve-btn')) {
                 await approvePendingDefect(defectId);
             }
@@ -271,6 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.tab-content').forEach((content) => content.classList.remove('active'));
             document.getElementById(`${tabName}-tab`).classList.add('active');
         });
+    });
+    closeApprovalGuidanceBtn.addEventListener('click', closeApprovalGuidanceModal);
+    approvalGuidanceDoneBtn.addEventListener('click', closeApprovalGuidanceModal);
+    approvalGuidanceModal.addEventListener('click', (event) => {
+        if (event.target.dataset.closeApprovalGuidance === 'true') {
+            closeApprovalGuidanceModal();
+        }
     });
 
     auth.onAuthStateChanged(async (user) => {
