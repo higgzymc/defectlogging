@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRepeatingGroups = [];
     let userDisplayNames = {};
     let currentTab = 'all-defects';
+    let guidanceBackfillInFlight = false;
 
     function initializeFirestoreListener() {
         db.collection('defects').orderBy('timestamp', 'desc').onSnapshot(async (snapshot) => {
             currentAllDefects = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             await fetchUserNames(currentAllDefects);
+            ensureDvsaGuidanceForOutstandingDefects(currentAllDefects);
             updateDisplay();
         }, (error) => {
             console.error('Error fetching defects: ', error);
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildDvsaGuidanceHtml(defect) {
-        const guidance = defect.dvsaGuidance;
+        const guidance = defect.dvsaGuidance || (typeof buildClientDvsaGuidance === 'function' ? buildClientDvsaGuidance(defect) : null);
         if (!guidance) return '';
 
         const referenceLinks = Array.isArray(guidance.sourceReferences) && guidance.sourceReferences.length > 0
@@ -139,6 +141,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="dvsa-guidance-disclaimer">${escapeHtml(guidance.disclaimer || 'Guidance only. Final decision rests with engineering or management.')}</p>
             </div>
         `;
+    }
+
+    async function ensureDvsaGuidanceForOutstandingDefects(defects) {
+        const currentUser = auth.currentUser;
+        if (!currentUser || !ADMIN_UIDS.includes(currentUser.uid) || guidanceBackfillInFlight || typeof buildClientDvsaGuidance !== 'function') {
+            return;
+        }
+
+        const missingGuidance = defects.filter(defect => !defect.isFixed && !defect.dvsaGuidance);
+        if (missingGuidance.length === 0) return;
+
+        guidanceBackfillInFlight = true;
+        try {
+            const batch = db.batch();
+            missingGuidance.slice(0, 400).forEach((defect) => {
+                const guidance = buildClientDvsaGuidance(defect);
+                batch.set(db.collection('defects').doc(defect.id), {
+                    dvsaGuidance: guidance,
+                    priority: guidance.priority,
+                    dvsaSeverity: guidance.severity
+                }, { merge: true });
+            });
+            await batch.commit();
+        } catch (error) {
+            console.error('Could not backfill DVSA guidance for outstanding defects:', error);
+        } finally {
+            guidanceBackfillInFlight = false;
+        }
     }
 
     function defectPatternText(defect) {
