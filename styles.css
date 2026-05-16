@@ -1179,6 +1179,35 @@ input[type="range"] {
     padding: 20px 18px;
 }
 
+.driver-tab-strip {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 18px;
+}
+
+.driver-tab-btn {
+    background: #eef2f6;
+    border: 1px solid #d8e0e7;
+    color: #22313f;
+    margin-right: 0;
+    padding: 10px 12px;
+}
+
+.driver-tab-btn.active {
+    background: linear-gradient(135deg, #ff7a18 0%, #ff9f1c 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.driver-tab-panel {
+    display: none;
+}
+
+.driver-tab-panel.active {
+    display: block;
+}
+
 .driver-panel-heading {
     align-items: flex-start;
     display: flex;
@@ -1234,6 +1263,61 @@ input[type="range"] {
     margin-bottom: 14px;
 }
 
+.driver-mini-stats {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    margin-bottom: 16px;
+}
+
+.driver-mini-stat {
+    background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+    border: 1px solid #dde6ef;
+    border-radius: 16px;
+    padding: 14px 12px;
+    text-align: center;
+}
+
+.driver-mini-stat span {
+    color: #1f2d3d;
+    display: block;
+    font-size: 1.7em;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.driver-mini-stat small {
+    color: #6c757d;
+    display: block;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.driver-defects-list {
+    display: grid;
+    gap: 14px;
+}
+
+.driver-repeat-filter-row {
+    margin-bottom: 16px;
+}
+
+.driver-repeat-filter-row label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.driver-muted-copy {
+    color: #6c757d;
+    margin: 0;
+}
+
+.driver-repeating-group .repeating-defects-list .defect-item {
+    margin-bottom: 0;
+}
+
 .driver-image-upload-area {
     margin-bottom: 16px;
     min-height: 120px;
@@ -1252,6 +1336,10 @@ input[type="range"] {
 
     .driver-mobile-header .driver-secondary-btn {
         max-width: none;
+    }
+
+    .driver-tab-strip {
+        grid-template-columns: 1fr 1fr;
     }
 
     .driver-upload-toolbar {

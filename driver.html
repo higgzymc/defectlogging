@@ -44,6 +44,14 @@
         </section>
 
         <section class="driver-mobile-panel" id="driverFormPanel" hidden>
+            <div class="driver-tab-strip" id="driverTabStrip">
+                <button type="button" class="driver-tab-btn active" data-driver-tab="submit">Submit</button>
+                <button type="button" class="driver-tab-btn" data-driver-tab="open">Open</button>
+                <button type="button" class="driver-tab-btn" data-driver-tab="fixed">Fixed</button>
+                <button type="button" class="driver-tab-btn" data-driver-tab="repeating">Repeating</button>
+            </div>
+
+            <section class="driver-tab-panel active" id="driver-submit-tab">
             <div class="driver-panel-heading">
                 <div>
                     <p class="driver-panel-kicker">New Submission</p>
@@ -88,6 +96,73 @@
 
             <button type="button" id="driverSubmitBtn" class="driver-primary-btn">Submit Defect</button>
             <div id="driverFormStatus" class="form-status" aria-live="polite"></div>
+            </section>
+
+            <section class="driver-tab-panel" id="driver-open-tab">
+                <div class="driver-panel-heading">
+                    <div>
+                        <p class="driver-panel-kicker">Outstanding</p>
+                        <h2>Current open defects</h2>
+                    </div>
+                </div>
+                <div class="driver-mini-stats">
+                    <div class="driver-mini-stat">
+                        <span id="driverOpenCount">0</span>
+                        <small>Open</small>
+                    </div>
+                    <div class="driver-mini-stat">
+                        <span id="driverOpenFleetCount">0</span>
+                        <small>Fleets</small>
+                    </div>
+                </div>
+                <div id="driverOpenDefectsList" class="driver-defects-list">
+                    <p>Loading open defects...</p>
+                </div>
+            </section>
+
+            <section class="driver-tab-panel" id="driver-fixed-tab">
+                <div class="driver-panel-heading">
+                    <div>
+                        <p class="driver-panel-kicker">Fixed</p>
+                        <h2>Recently fixed defects</h2>
+                    </div>
+                </div>
+                <div class="driver-mini-stats">
+                    <div class="driver-mini-stat">
+                        <span id="driverFixedCount">0</span>
+                        <small>Fixed</small>
+                    </div>
+                </div>
+                <div id="driverFixedDefectsList" class="driver-defects-list">
+                    <p>Loading fixed defects...</p>
+                </div>
+            </section>
+
+            <section class="driver-tab-panel" id="driver-repeating-tab">
+                <div class="driver-panel-heading">
+                    <div>
+                        <p class="driver-panel-kicker">Repeating</p>
+                        <h2>Repeat issues to watch</h2>
+                    </div>
+                </div>
+                <div class="driver-repeat-filter-row">
+                    <label for="driverRepeatThreshold">Similarity Threshold <span id="driverRepeatThresholdValue">80%</span></label>
+                    <input type="range" id="driverRepeatThreshold" min="50" max="100" value="80">
+                </div>
+                <div class="driver-mini-stats">
+                    <div class="driver-mini-stat">
+                        <span id="driverRepeatingCount">0</span>
+                        <small>Groups</small>
+                    </div>
+                    <div class="driver-mini-stat">
+                        <span id="driverRepeatingFleetCount">0</span>
+                        <small>Fleets</small>
+                    </div>
+                </div>
+                <div id="driverRepeatingDefectsList" class="driver-defects-list">
+                    <p>Loading repeating defects...</p>
+                </div>
+            </section>
         </section>
     </main>
 
