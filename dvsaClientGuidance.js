@@ -26,6 +26,17 @@ window.DVSA_GUIDANCE_RULES = [
         triggers: ['tyre', 'tire', 'bulge', 'cord', 'flat', 'puncture', 'wheel nut', 'loose wheel', 'rim cracked']
     },
     {
+        handbookSection: 'Walkaround checks - steering, braking and warning systems',
+        sourceKey: 'roadworthiness',
+        priority: 'stop_and_escalate_now',
+        severity: 'possible_major',
+        confidence: 'high',
+        engineeringReviewRequired: true,
+        summary: 'ABS or brake-system warning lights should be escalated before the vehicle continues in service.',
+        why: 'ABS lights, brake warning lamps, and similar dash warnings can point to a braking-system fault that needs immediate engineering attention.',
+        triggers: ['abs', 'abs light', 'abs fault', 'abs warning', 'brake warning', 'warning light', 'warning lamp', 'dash warning', 'dashboard warning']
+    },
+    {
         handbookSection: 'Walkaround checks - steering, braking and stability related issues',
         sourceKey: 'roadworthiness',
         priority: 'stop_and_escalate_now',
