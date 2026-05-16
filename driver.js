@@ -548,15 +548,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initializeDefectListener() {
         if (defectsUnsubscribe) defectsUnsubscribe();
-        defectsUnsubscribe = db.collection('defects').orderBy('timestamp', 'desc').onSnapshot(async (snapshot) => {
+        defectsUnsubscribe = driverDb.collection('defects').orderBy('timestamp', 'desc').onSnapshot(async (snapshot) => {
             currentAllDefects = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             await fetchUserNames(currentAllDefects);
             updateDefectViews();
         }, (error) => {
             console.error('Error loading defects for driver web app:', error);
-            driverOpenDefectsList.innerHTML = '<p>Could not load open defects.</p>';
-            driverFixedDefectsList.innerHTML = '<p>Could not load fixed defects.</p>';
-            driverRepeatingDefectsList.innerHTML = '<p>Could not load repeating defects.</p>';
+            const message = error?.message ? `Could not load defects: ${error.message}` : 'Could not load defects.';
+            driverOpenDefectsList.innerHTML = `<p>${message}</p>`;
+            driverFixedDefectsList.innerHTML = `<p>${message}</p>`;
+            driverRepeatingDefectsList.innerHTML = `<p>${message}</p>`;
         });
     }
 

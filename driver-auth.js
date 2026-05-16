@@ -59,6 +59,21 @@ async function getDriverUserRecord(uid) {
     return snapshot.exists ? snapshot.data() : null;
 }
 
+async function getDriverDisplayNameForUser(uid) {
+    if (!uid) return 'N/A';
+    try {
+        const userDoc = await driverDb.collection('users').doc(uid).get();
+        if (userDoc.exists) {
+            return userDoc.data().displayName || 'Anonymous';
+        }
+    } catch (error) {
+        console.error(`Error fetching display name for UID ${uid}:`, error);
+    }
+    return 'Anonymous';
+}
+
+window.getDisplayNameForUser = getDriverDisplayNameForUser;
+
 function resolveDriverAccessState(userRecord) {
     if (!userRecord) return DriverAccessState.PENDING;
     if (userRecord.status === 'pending') return DriverAccessState.PENDING;
