@@ -389,6 +389,45 @@ document.addEventListener('DOMContentLoaded', () => {
         return chips.join('');
     }
 
+    function priorityLabel(priority) {
+        switch (priority) {
+            case 'stop_and_escalate_now': return 'Stop and escalate now';
+            case 'engineering_check_recommended': return 'Engineering check recommended';
+            case 'continue_and_monitor': return 'Continue and monitor';
+            default: return 'Guidance available';
+        }
+    }
+
+    function severityLabel(severity) {
+        switch (severity) {
+            case 'possible_dangerous': return 'Possible dangerous';
+            case 'possible_major': return 'Possible major';
+            case 'possible_minor': return 'Possible minor';
+            default: return 'Unclassified';
+        }
+    }
+
+    function buildDvsaGuidanceHtml(guidance) {
+        if (!guidance) return '';
+        const referenceLinks = Array.isArray(guidance.sourceReferences) && guidance.sourceReferences.length > 0
+            ? guidance.sourceReferences.map((reference) => `<a href="${reference.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(reference.title || reference.url)}</a>`).join(' | ')
+            : 'No source reference attached';
+
+        return `
+            <div class="dvsa-guidance-card">
+                <div class="dvsa-guidance-topline">
+                    <strong>AI DVSA Guidance</strong>
+                    <span class="detail-chip subtle-chip">${escapeHtml(priorityLabel(guidance.priority))}</span>
+                    <span class="detail-chip muted-chip">${escapeHtml(severityLabel(guidance.severity))}</span>
+                </div>
+                <p><strong>Section:</strong> ${escapeHtml(guidance.handbookSection || 'Manual review')}</p>
+                <p><strong>Why:</strong> ${escapeHtml(guidance.summary || guidance.why || 'No explanation available.')}</p>
+                <p><strong>Reference:</strong> ${referenceLinks}</p>
+                <p class="dvsa-guidance-disclaimer">${escapeHtml(guidance.disclaimer || 'Guidance only. Final decision rests with engineering or management.')}</p>
+            </div>
+        `;
+    }
+
     function formatCommentsHtml(comments) {
         if (!comments || comments.length === 0) return '<p class="driver-muted-copy">No comments yet.</p>';
         const sortedComments = [...comments].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -428,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${buildAreaBadgeHtml(defect)}
             </div>
             <p><strong>Defect:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
+            ${buildDvsaGuidanceHtml(defect.dvsaGuidance)}
             <p><strong>Logged By:</strong> ${escapeHtml(userDisplayNames[defect.loggedInUser] || defect.userName || 'Unknown')}</p>
             <p><strong>Logged On:</strong> ${formatDateTimeValue(defect.timestamp)}</p>
             ${imagesHtml}
