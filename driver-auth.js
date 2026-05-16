@@ -14,9 +14,11 @@ if (!firebase.apps.length) {
 
 const driverAuth = firebase.auth();
 const driverDb = firebase.firestore();
+const driverFunctions = typeof firebase.functions === 'function' ? firebase.app().functions('us-central1') : null;
 const driverGoogleProvider = new firebase.auth.GoogleAuthProvider();
 window.auth = driverAuth;
 window.db = driverDb;
+window.defectFunctions = driverFunctions;
 
 const DriverAccessState = Object.freeze({
     ALLOWED: 'allowed',

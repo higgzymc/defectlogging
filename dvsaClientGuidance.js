@@ -148,3 +148,29 @@ window.buildClientDvsaGuidance = function buildClientDvsaGuidance(defect) {
         disclaimer: 'Guidance only. Final decision rests with engineering or management.'
     };
 };
+
+window.fetchDvsaGuidancePreview = async function fetchDvsaGuidancePreview(defect) {
+    const fallback = window.buildClientDvsaGuidance(defect);
+    if (!window.defectFunctions) {
+        return fallback;
+    }
+
+    try {
+        const previewCallable = window.defectFunctions.httpsCallable('previewDvsaGuidance');
+        const result = await previewCallable({ defect });
+        return result?.data?.guidance || fallback;
+    } catch (error) {
+        console.error('Could not fetch AI DVSA guidance preview:', error);
+        return fallback;
+    }
+};
+
+window.reassessOutstandingDvsaGuidance = async function reassessOutstandingDvsaGuidance(options = {}) {
+    if (!window.defectFunctions) {
+        throw new Error('Firebase Functions is not available on this page.');
+    }
+
+    const reassessCallable = window.defectFunctions.httpsCallable('reassessOutstandingDefects');
+    const result = await reassessCallable(options);
+    return result?.data || { updated: 0, skipped: 0, scanned: 0, usedAi: false };
+};

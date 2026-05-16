@@ -80,10 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    function openApprovalGuidanceModal(defect) {
-        const guidance = defect.dvsaGuidance || buildClientDvsaGuidance(defect);
-        approvalGuidanceContent.innerHTML = buildDvsaGuidanceHtml(guidance);
+    async function openApprovalGuidanceModal(defect) {
+        approvalGuidanceContent.innerHTML = '<p>Loading DVSA guidance...</p>';
         approvalGuidanceModal.hidden = false;
+        const guidance = defect.dvsaGuidance || await fetchDvsaGuidancePreview(defect);
+        approvalGuidanceContent.innerHTML = buildDvsaGuidanceHtml(guidance);
     }
 
     function closeApprovalGuidanceModal() {

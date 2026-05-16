@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const vehicleType = getVehicleTypeForFleetNumber(fleetNumber);
-        const guidance = buildClientDvsaGuidance({
+        const guidance = await fetchDvsaGuidancePreview({
             fleetNumber,
             busType: vehicleType,
             locationArea: selectedArea,

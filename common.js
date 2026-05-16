@@ -13,6 +13,8 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
+const defectFunctions = typeof firebase.functions === 'function' ? firebase.app().functions('us-central1') : null;
+window.defectFunctions = defectFunctions;
 
 // --- Admin User IDs ---
 // Reverted to a single list of admins with full permissions.
