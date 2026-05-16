@@ -815,6 +815,33 @@ input[type="range"] {
     padding: 7px 10px;
 }
 
+.approval-user-card {
+    background: linear-gradient(135deg, #fafbfd 0%, #ffffff 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 10px 24px rgba(24,39,75,0.05);
+    margin-bottom: 15px;
+    padding: 18px;
+}
+
+.approval-user-head {
+    align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.approval-user-head h3 {
+    margin: 0 0 4px;
+    text-align: left;
+}
+
+.approval-user-head p {
+    color: #6c757d;
+    margin: 0;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     #loggedInUserDisplay {

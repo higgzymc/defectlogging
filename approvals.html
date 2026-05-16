@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approvals - Bus Defect Logger</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="admin-app-body">
+    <header class="header">
+        <div class="header-content">
+            <button id="menuBtn" class="menu-btn">&#9776;</button>
+            <h1 class="header-title">Approvals</h1>
+            <div id="loggedInUserDisplay">
+                Logged in as: <span id="currentUserName"></span>
+                <button id="logoutBtn">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="sideNav" class="sidenav">
+        <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
+        <a href="./index.html">Log New Defect</a>
+        <a href="./defects.html">View All Defects</a>
+        <a href="./approvals.html">Approvals</a>
+        <a href="./categories.html">Categories</a>
+        <a href="./dashboard.html">Dashboard</a>
+    </nav>
+
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <div>
+                <p class="page-hero-kicker">Approval Queue</p>
+                <h2>Review driver reports and new driver accounts</h2>
+                <p>Approve incoming driver defects into the main defect log and control which driver accounts are allowed to use the system.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container admin-container">
+        <section id="approvalSection">
+            <div class="tab-navigation">
+                <button type="button" class="tab-btn active" data-tab="pending-defects">Pending Defects</button>
+                <button type="button" class="tab-btn" data-tab="pending-users">Pending Users</button>
+            </div>
+
+            <div id="pending-defects-tab" class="tab-content active">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h4>Pending Defects</h4>
+                        <p id="pendingDefectsCount">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Outstanding Fleets</h4>
+                        <p id="pendingFleetCount">0</p>
+                    </div>
+                </div>
+                <div id="pendingDefectsList">
+                    <p>Loading pending defects...</p>
+                </div>
+            </div>
+
+            <div id="pending-users-tab" class="tab-content">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h4>Pending Users</h4>
+                        <p id="pendingUsersCount">0</p>
+                    </div>
+                </div>
+                <div id="pendingUsersList">
+                    <p>Loading pending users...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+    <script src="./common.js"></script>
+    <script src="./fleetNumbers.js"></script>
+    <script src="./approvals.js"></script>
+</body>
+</html>
