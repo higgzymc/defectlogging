@@ -804,3 +804,326 @@ input[type="range"] {
     margin: 0;
     color: #007bff;
 }
+
+.driver-auth-body,
+.driver-web-body {
+    background:
+        radial-gradient(circle at top, rgba(255, 165, 0, 0.22), transparent 32%),
+        linear-gradient(180deg, #f5f7fb 0%, #eef2f7 100%);
+    min-height: 100vh;
+    padding-top: 0;
+}
+
+.driver-auth-shell,
+.driver-web-shell {
+    margin: 0 auto;
+    max-width: 640px;
+    padding: 20px 16px 40px;
+}
+
+.driver-auth-card,
+.driver-mobile-panel {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(215, 221, 227, 0.9);
+    border-radius: 22px;
+    box-shadow: 0 22px 40px rgba(24, 39, 75, 0.08);
+}
+
+.driver-auth-card {
+    margin: 24px auto;
+    max-width: 480px;
+    padding: 26px 22px 22px;
+}
+
+.driver-brand-lockup {
+    text-align: center;
+}
+
+.driver-brand-logo {
+    border-radius: 16px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    height: auto;
+    margin-bottom: 16px;
+    max-width: 108px;
+}
+
+.driver-brand-kicker,
+.driver-mobile-kicker,
+.driver-panel-kicker {
+    color: #d35400;
+    font-size: 0.82em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin: 0 0 6px;
+    text-transform: uppercase;
+}
+
+.driver-brand-lockup h1,
+.driver-mobile-header h1,
+.driver-panel-heading h2,
+.driver-empty-state h2 {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.driver-brand-lockup h1 {
+    text-align: center;
+}
+
+.driver-brand-copy,
+.driver-panel-copy,
+.driver-empty-state p {
+    color: #5c6773;
+    margin: 0;
+}
+
+.driver-auth-tabs {
+    background: #f3f5f7;
+    border-radius: 14px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 1fr 1fr;
+    margin: 24px 0 16px;
+    padding: 6px;
+}
+
+.driver-auth-tab {
+    background: transparent;
+    color: #495057;
+    margin-right: 0;
+    padding: 12px 14px;
+}
+
+.driver-auth-tab.active {
+    background: #ffffff;
+    box-shadow: 0 6px 14px rgba(24, 39, 75, 0.08);
+    color: #0b5ed7;
+}
+
+.driver-auth-panel {
+    margin-bottom: 10px;
+}
+
+.driver-auth-panel input[type="email"],
+.driver-auth-panel input[type="password"],
+.driver-auth-panel input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #ced4da;
+    border-radius: 12px;
+    font-size: 1em;
+    box-sizing: border-box;
+    background-color: #fcfcfc;
+}
+
+.driver-auth-panel input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.driver-auth-divider {
+    align-items: center;
+    color: #6c757d;
+    display: flex;
+    gap: 14px;
+    margin: 18px 0 16px;
+}
+
+.driver-auth-divider::before,
+.driver-auth-divider::after {
+    background: #dee2e6;
+    content: "";
+    flex: 1;
+    height: 1px;
+}
+
+.driver-primary-btn,
+.driver-secondary-btn,
+.driver-google-btn {
+    border-radius: 14px;
+    margin-right: 0;
+    width: 100%;
+}
+
+.driver-primary-btn {
+    background: linear-gradient(135deg, #ff7a18 0%, #ff9f1c 100%);
+}
+
+.driver-primary-btn:hover {
+    background: linear-gradient(135deg, #ef6c0d 0%, #f08d0b 100%);
+}
+
+.driver-secondary-btn {
+    background: #edf2f7;
+    color: #22313f;
+}
+
+.driver-secondary-btn:hover {
+    background: #dde6ef;
+    color: #13212f;
+}
+
+.driver-google-btn {
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #d7dde3;
+    color: #2c3e50;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.driver-google-btn:hover {
+    background: #f7f9fc;
+    color: #0b5ed7;
+}
+
+.driver-google-btn img {
+    height: 20px;
+    width: 20px;
+}
+
+.driver-auth-footnote {
+    color: #6c757d;
+    font-size: 0.92em;
+    margin: 18px 0 0;
+    text-align: center;
+}
+
+.driver-auth-status {
+    border-radius: 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    margin-bottom: 16px;
+    min-height: 1.4em;
+    padding: 0;
+}
+
+.driver-auth-status.info,
+.driver-auth-status.success,
+.driver-auth-status.error {
+    padding: 12px 14px;
+}
+
+.driver-auth-status.info {
+    background: #eef5ff;
+    color: #24527a;
+}
+
+.driver-auth-status.success {
+    background: #e8f5e9;
+    color: #1f6f35;
+}
+
+.driver-auth-status.error {
+    background: #fdecec;
+    color: #b42318;
+}
+
+.driver-mobile-header {
+    align-items: flex-start;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 640px;
+    padding: 18px 16px 8px;
+}
+
+.driver-mobile-header h1 {
+    color: #1f2d3d;
+    font-size: 1.9em;
+    margin-top: 0;
+}
+
+.driver-mobile-header .driver-secondary-btn {
+    margin-top: 6px;
+    max-width: 120px;
+}
+
+.driver-mobile-panel {
+    margin-bottom: 18px;
+    padding: 20px 18px;
+}
+
+.driver-panel-heading {
+    align-items: flex-start;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.driver-status-badge {
+    border-radius: 999px;
+    font-size: 0.8em;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    padding: 8px 10px;
+    white-space: nowrap;
+}
+
+.driver-status-badge.pending {
+    background: #fff4d6;
+    color: #9a6700;
+}
+
+.driver-status-badge.approved {
+    background: #dff5e4;
+    color: #1f6f35;
+}
+
+.driver-status-badge.rejected {
+    background: #fdecec;
+    color: #b42318;
+}
+
+.driver-empty-state {
+    background: linear-gradient(135deg, #f8fbff 0%, #ffffff 100%);
+    border: 1px dashed #ced7e0;
+    border-radius: 18px;
+    padding: 22px 18px;
+}
+
+.driver-empty-state.danger {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+    border-color: #efc6c6;
+}
+
+.driver-picker-grid {
+    margin-top: 8px;
+}
+
+.driver-upload-toolbar {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 14px;
+}
+
+.driver-image-upload-area {
+    margin-bottom: 16px;
+    min-height: 120px;
+}
+
+@media (max-width: 768px) {
+    .driver-web-shell,
+    .driver-auth-shell {
+        padding: 12px 12px 28px;
+    }
+
+    .driver-mobile-header {
+        flex-direction: column;
+        padding: 16px 12px 4px;
+    }
+
+    .driver-mobile-header .driver-secondary-btn {
+        max-width: none;
+    }
+
+    .driver-upload-toolbar {
+        grid-template-columns: 1fr;
+    }
+}

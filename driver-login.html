@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Login - Bus Defect Driver</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="driver-auth-body">
+    <main class="driver-auth-shell">
+        <section class="driver-auth-card">
+            <div class="driver-brand-lockup">
+                <img class="driver-brand-logo" src="./images/logo.png" alt="Burnley Bus Company logo">
+                <p class="driver-brand-kicker">Driver Web App</p>
+                <h1>Report defects from iPhone</h1>
+                <p class="driver-brand-copy">Sign in or create a driver account. New accounts wait for approval before they can send defects into the system.</p>
+            </div>
+
+            <div class="driver-auth-tabs" role="tablist" aria-label="Authentication options">
+                <button type="button" id="showLoginTabBtn" class="driver-auth-tab active" aria-pressed="true">Sign In</button>
+                <button type="button" id="showSignupTabBtn" class="driver-auth-tab" aria-pressed="false">Create Account</button>
+            </div>
+
+            <div id="authStatusMessage" class="driver-auth-status" aria-live="polite"></div>
+
+            <section id="loginPanel" class="driver-auth-panel">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" autocomplete="email" placeholder="driver@company.com">
+
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Enter password">
+
+                <button type="button" id="emailLoginBtn" class="driver-primary-btn">Sign In</button>
+            </section>
+
+            <section id="signupPanel" class="driver-auth-panel" hidden>
+                <label for="signupName">Your Name</label>
+                <input type="text" id="signupName" autocomplete="name" placeholder="e.g. James Smith">
+
+                <label for="signupEmail">Email</label>
+                <input type="email" id="signupEmail" autocomplete="email" placeholder="driver@company.com">
+
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" autocomplete="new-password" placeholder="At least 6 characters">
+
+                <button type="button" id="emailSignupBtn" class="driver-primary-btn">Create Driver Account</button>
+            </section>
+
+            <div class="driver-auth-divider">
+                <span>or</span>
+            </div>
+
+            <button type="button" id="googleAuthBtn" class="driver-google-btn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="">
+                Continue with Google
+            </button>
+
+            <p class="driver-auth-footnote">Admin site: <a href="./login.html">open the main defect logger</a></p>
+        </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+    <script src="./driver-auth.js"></script>
+</body>
+</html>

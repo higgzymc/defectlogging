@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Defect Driver</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="driver-web-body">
+    <header class="driver-mobile-header">
+        <div>
+            <p class="driver-mobile-kicker">Driver Web App</p>
+            <h1>Bus Defect Driver</h1>
+        </div>
+        <button type="button" id="driverLogoutBtn" class="driver-secondary-btn">Log Out</button>
+    </header>
+
+    <main class="driver-web-shell">
+        <section class="driver-mobile-panel" id="driverAccountPanel">
+            <div class="driver-panel-heading">
+                <div>
+                    <p class="driver-panel-kicker">Account</p>
+                    <h2 id="driverWelcomeTitle">Checking account...</h2>
+                </div>
+                <span id="driverApprovalBadge" class="driver-status-badge pending">Waiting</span>
+            </div>
+            <p id="driverAccountMessage" class="driver-panel-copy">We are checking whether your account has been approved.</p>
+        </section>
+
+        <section class="driver-mobile-panel" id="driverPendingPanel">
+            <div class="driver-empty-state">
+                <h2>Waiting for approval</h2>
+                <p>Your driver account has been created, but an administrator still needs to approve it before you can submit defects.</p>
+                <p>Leave this tab open and try again later, or close it and come back once you have been approved.</p>
+            </div>
+        </section>
+
+        <section class="driver-mobile-panel" id="driverRejectedPanel" hidden>
+            <div class="driver-empty-state danger">
+                <h2>Access not approved</h2>
+                <p>This driver account has been rejected or is not allowed to use the driver web app.</p>
+                <p>If you think this is wrong, contact the administrator who manages bus defect approvals.</p>
+            </div>
+        </section>
+
+        <section class="driver-mobile-panel" id="driverFormPanel" hidden>
+            <div class="driver-panel-heading">
+                <div>
+                    <p class="driver-panel-kicker">New Submission</p>
+                    <h2>Submit a defect for approval</h2>
+                </div>
+            </div>
+            <p class="driver-panel-copy">Choose the fleet, pick the location, then send the report. It will go into the approval queue rather than straight onto the live defect list.</p>
+
+            <label for="driverFleetNumber">Fleet Number</label>
+            <input type="text" id="driverFleetNumber" list="driverFleetNumberOptions" inputmode="numeric" autocomplete="off" placeholder="e.g. 2005">
+            <datalist id="driverFleetNumberOptions"></datalist>
+            <div id="driverVehicleType" class="vehicle-type-display">Vehicle type will appear after choosing a fleet number.</div>
+            <div id="driverFleetError" class="field-error" aria-live="polite"></div>
+
+            <div class="category-picker-grid driver-picker-grid">
+                <div>
+                    <label for="driverSelectAreaBtn">Defect Area</label>
+                    <button type="button" id="driverSelectAreaBtn" class="picker-btn">Choose defect area</button>
+                    <div id="driverSelectedArea" class="selection-display">No area selected yet.</div>
+                </div>
+                <div>
+                    <label for="driverSelectSubcategoryBtn">Subcategory</label>
+                    <button type="button" id="driverSelectSubcategoryBtn" class="picker-btn" disabled>Choose subcategory</button>
+                    <div id="driverSelectedSubcategory" class="selection-display">Choose an area first.</div>
+                </div>
+            </div>
+            <div id="driverCategoryError" class="field-error" aria-live="polite"></div>
+
+            <label for="driverDefectDescription">Defect Description</label>
+            <textarea id="driverDefectDescription" rows="5" placeholder="Describe the fault clearly so it can be approved quickly."></textarea>
+
+            <div class="driver-upload-toolbar">
+                <button type="button" id="driverTakePhotoBtn" class="driver-secondary-btn">Take Photo</button>
+                <button type="button" id="driverChoosePhotosBtn" class="driver-secondary-btn">Choose From Photos</button>
+            </div>
+            <div class="image-upload-area driver-image-upload-area">
+                <p>Add up to 3 photos to help the administrator approve the defect.</p>
+                <div id="driverImagePreviewContainer"></div>
+            </div>
+            <input type="file" id="driverPhotoLibraryInput" accept="image/*" multiple hidden>
+            <input type="file" id="driverCameraInput" accept="image/*" capture="environment" hidden>
+
+            <button type="button" id="driverSubmitBtn" class="driver-primary-btn">Submit Defect</button>
+            <div id="driverFormStatus" class="form-status" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <div id="driverPickerModal" class="picker-modal" hidden>
+        <div class="picker-modal-backdrop" data-close-driver-picker="true"></div>
+        <div class="picker-modal-card" role="dialog" aria-modal="true" aria-labelledby="driverPickerModalTitle">
+            <div class="picker-modal-header">
+                <h3 id="driverPickerModalTitle">Choose an option</h3>
+                <button type="button" id="closeDriverPickerBtn" class="picker-close-btn" aria-label="Close selector">&times;</button>
+            </div>
+            <p id="driverPickerModalDescription" class="picker-modal-description"></p>
+            <div id="driverPickerModalOptions" class="picker-options"></div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+
+    <script src="./driver-auth.js"></script>
+    <script src="./fleetNumbers.js"></script>
+    <script src="./defectCategories.js"></script>
+    <script src="./driver.js"></script>
+</body>
+</html>
