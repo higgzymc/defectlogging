@@ -6,7 +6,7 @@
     <title>Log Defect - Bus Defect Logger</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
+<body class="admin-app-body">
 
     <header class="header">
         <div class="header-content">
@@ -26,16 +26,20 @@
         <a href="./categories.html">Categories</a>
         <a href="./dashboard.html">Dashboard</a>
     </nav>
-    <div style="padding: 20px; text-align: center; background-color: #e9ecef; border-radius: 8px; margin: 20px auto; max-width: 900px;">
-    <h3 style="margin-top: 0; color: #2c3e50;">Get the Android App</h3>
-    <p style="color: #555;">For the best experience, install the native Android app on your phone.</p>
-    <a href="./downloads/bus-defect-logger.apk" download="bus defect logger.apk" style="display: inline-block; padding: 12px 25px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
-        Download the App (.apk)
-    </a>
-</div>
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <div>
+                <p class="page-hero-kicker">Admin Control</p>
+                <h2>Log defects with full control</h2>
+                <p>Use the full admin workflow to record, review, and manage defects across the fleet with categories, exports, and approvals.</p>
+            </div>
+            <div class="page-hero-actions">
+                <a href="./downloads/bus-defect-logger.apk" download="bus defect logger.apk" class="hero-download-btn">Download Android App</a>
+            </div>
+        </div>
+    </section>
 
-
-    <div class="container">
+    <div class="container admin-container">
         <img id="companyLogo" src="./images/logo.png" alt="Company Logo" onerror="this.style.display='none'">
         
         <section id="inputForm">

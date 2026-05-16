@@ -6,7 +6,7 @@
     <title>All Defects - Bus Defect Logger</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
+<body class="admin-app-body">
 
     <header class="header">
         <div class="header-content">
@@ -27,7 +27,17 @@
         <a href="./dashboard.html">Dashboard</a>
     </nav>
 
-    <div class="container">
+    <section class="page-hero">
+        <div class="page-hero-inner">
+            <div>
+                <p class="page-hero-kicker">Defect Oversight</p>
+                <h2>Track live faults and repeat issues</h2>
+                <p>Review outstanding and fixed defects, export reports, and keep an eye on repeat problems from one place.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="container admin-container">
         <section id="defectLog">
             <div class="tab-navigation">
                 <button type="button" class="tab-btn active" data-tab="all-defects">All Defects</button>
