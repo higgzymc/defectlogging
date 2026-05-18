@@ -1,11 +1,12 @@
 window.DEFAULT_DEFECT_CATEGORIES = {
-    Front: ['Destination Display', 'Headlights', 'Indicators', 'Wipers', 'Windscreen', 'Bodywork'],
-    Nearside: ['Bodywork', 'Windows', 'Lights', 'Tyre', 'Wheel', 'Doors'],
-    Rear: ['Rear Lights', 'Engine Flap', 'Bodywork', 'Destination Display', 'Bumper'],
-    Offside: ['Bodywork', 'Windows', 'Tyre', 'Wheel', 'Lights'],
-    Cab: ['Steering', 'Dashboard', 'Ticket Machine Area', 'Mirrors', 'Driver Seat', 'Warning Lights'],
-    Saloon: ['Seats', 'Bell Pushes', 'Lighting', 'Heating', 'Flooring', 'Windows'],
-    Engine: ['Oil Leak', 'Coolant Leak', 'Belts', 'Batteries', 'Overheating', 'Loss of Power']
+    Front: ['Destination Display', 'Headlights', 'Indicators', 'Wipers', 'Windscreen', 'Bodywork', 'Marker Lights', 'Brake Lights', 'Reflectors'],
+    Nearside: ['Bodywork', 'Windows', 'Lights', 'Tyre', 'Wheel', 'Doors', 'Wheelchair Ramp', 'Kneeling System', 'Accessibility Door', 'Passenger Door Interlock', 'Centre Door'],
+    Rear: ['Rear Lights', 'Engine Flap', 'Bodywork', 'Destination Display', 'Bumper', 'Marker Lights', 'Brake Lights', 'Indicators', 'Reflectors'],
+    Offside: ['Bodywork', 'Windows', 'Tyre', 'Wheel', 'Lights', 'Kneeling System', 'Accessibility Door'],
+    Cab: ['Steering', 'Dashboard', 'Ticket Machine Area', 'Mirrors', 'Driver Seat', 'Warning Lights', 'ABS / Brake Warning', 'EBS Warning', 'Parking Brake Warning', 'Air Pressure Warning', 'Engine Warning', 'Power Steering', 'Instrument Cluster', 'Dashboard Warning Lamps'],
+    Saloon: ['Seats', 'Bell Pushes', 'Lighting', 'Heating', 'Flooring', 'Windows', 'Wheelchair Space', 'Wheelchair Restraint', 'Priority Seating', 'Handrails', 'Step Lighting', 'Emergency Equipment'],
+    Engine: ['Oil Leak', 'Coolant Leak', 'Belts', 'Batteries', 'Overheating', 'Loss of Power', 'Fuel Leak', 'Smoke', 'Fire Risk'],
+    Doors: ['Front Door', 'Centre Door', 'Rear Door', 'Emergency Exit', 'Passenger Door Interlock', 'Accessibility Door']
 };
 
 window.defectCategoriesMap = cloneDefaultDefectCategories();
