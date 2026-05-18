@@ -7,6 +7,10 @@ window.DVSA_GUIDANCE_SOURCES = {
         title: 'DVSA: Guide to maintaining roadworthiness',
         url: 'https://www.gov.uk/government/publications/guide-to-maintaining-roadworthiness'
     },
+    psvAccessibility: {
+        title: 'The Public Service Vehicles Accessibility Regulations 2000',
+        url: 'https://www.legislation.gov.uk/uksi/2000/1970/pdfs/uksi_20001970_en.pdf'
+    },
     categorisation: {
         title: 'DVSA: Categorisation of vehicle defects',
         url: 'https://www.gov.uk/government/publications/categorisation-of-defects'
@@ -14,6 +18,17 @@ window.DVSA_GUIDANCE_SOURCES = {
 };
 
 window.DVSA_GUIDANCE_RULES = [
+    {
+        handbookSection: 'PSVAR accessibility equipment - kneeling and boarding device operation',
+        sourceKey: 'psvAccessibility',
+        priority: 'stop_and_escalate_now',
+        severity: 'possible_major',
+        confidence: 'high',
+        engineeringReviewRequired: true,
+        summary: 'A kneeling or boarding-device fault should be escalated before the vehicle remains in public service use.',
+        why: 'Kneeling systems, wheelchair ramps, and related accessibility equipment can be essential to compliant PSV public service operation.',
+        triggers: ['kneel', 'kneeling', 'kneeler', 'wheelchair ramp', 'boarding device', 'accessibility ramp', 'wheelchair access', 'ramp not working', 'ramp fault', 'low floor']
+    },
     {
         handbookSection: 'Walkaround checks - tyres and wheels',
         sourceKey: 'walkaroundChecks',
