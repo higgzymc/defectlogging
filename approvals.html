@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Approvals - Bus Defect Logger</title>
+    <meta name="theme-color" content="#1f2d3d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Defect Admin">
+    <link rel="manifest" href="./admin.webmanifest">
+    <link rel="apple-touch-icon" href="./images/admin-apple-touch-icon.png">
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body class="admin-app-body">
@@ -35,6 +41,7 @@
                 <p>Approve incoming driver defects into the main defect log and control which driver accounts are allowed to use the system.</p>
             </div>
         </div>
+        <p id="adminInstallHint" class="admin-install-hint" hidden>On iPhone, tap Share and then Add to Home Screen to install the admin web app.</p>
     </section>
 
     <div class="container admin-container">
@@ -100,5 +107,6 @@
     <script src="./fleetNumbers.js"></script>
     <script src="./dvsaClientGuidance.js"></script>
     <script src="./approvals.js"></script>
+    <script src="./admin-pwa.js"></script>
 </body>
 </html>

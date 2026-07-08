@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Defect Logger Login</title>
+    <meta name="theme-color" content="#1f2d3d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Defect Admin">
+    <link rel="manifest" href="./admin.webmanifest">
+    <link rel="apple-touch-icon" href="./images/admin-apple-touch-icon.png">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -145,6 +151,16 @@
         .driver-web-link a:hover {
             text-decoration: underline;
         }
+        .install-hint {
+            background: #eef5ff;
+            border: 1px solid #cfe2ff;
+            border-radius: 12px;
+            color: #24527a;
+            font-size: 0.94em;
+            font-weight: 600;
+            margin-top: 16px;
+            padding: 12px 14px;
+        }
 
 
         /* Logo styling (copied from index.html) */
@@ -197,6 +213,7 @@
                 Sign in with Google
             </button>
         </div>
+        <p id="adminInstallHint" class="install-hint" hidden>On iPhone, tap Share and then Add to Home Screen to install the admin web app.</p>
 
         <p class="driver-web-link">Using an iPhone as a driver? <a href="./driver-login.html">Open the driver web app</a></p>
     </div>
@@ -204,6 +221,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="./admin-pwa.js"></script>
 
     <script>
         // Your web app's Firebase configuration
