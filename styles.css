@@ -1156,27 +1156,60 @@ input[type="range"] {
 }
 
 .driver-install-hint {
-    background: linear-gradient(135deg, #fff4e8 0%, #fffaf3 100%);
+    background: linear-gradient(135deg, #fff6eb 0%, #fffdf8 100%);
     border: 1px solid #ffd2a8;
-    border-radius: 14px;
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(196, 109, 18, 0.08);
     color: #7a4b14;
-    font-size: 0.94em;
+    font-size: 0.95em;
     font-weight: 600;
+    line-height: 1.45;
     margin: 16px 0 0;
-    padding: 12px 14px;
-    text-align: center;
+    padding: 14px 16px 14px 56px;
+    position: relative;
+    text-align: left;
 }
 
 .admin-install-hint {
-    background: linear-gradient(135deg, #eef5ff 0%, #f8fbff 100%);
+    background: linear-gradient(135deg, #eef5ff 0%, #fbfdff 100%);
     border: 1px solid #cfe2ff;
-    border-radius: 14px;
+    border-radius: 18px;
+    box-shadow: 0 12px 24px rgba(36, 82, 122, 0.08);
     color: #24527a;
-    font-size: 0.94em;
+    font-size: 0.95em;
     font-weight: 600;
+    line-height: 1.45;
     margin: 16px 0 0;
-    padding: 12px 14px;
-    text-align: center;
+    padding: 14px 16px 14px 56px;
+    position: relative;
+    text-align: left;
+}
+
+.driver-install-hint::before,
+.admin-install-hint::before {
+    align-items: center;
+    border-radius: 999px;
+    content: "↑";
+    display: flex;
+    font-size: 1.05em;
+    font-weight: 800;
+    height: 28px;
+    justify-content: center;
+    left: 16px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+}
+
+.driver-install-hint::before {
+    background: #ff9f1c;
+    color: #ffffff;
+}
+
+.admin-install-hint::before {
+    background: #2b6cb0;
+    color: #ffffff;
 }
 
 .driver-auth-status {

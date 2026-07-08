@@ -152,14 +152,35 @@
             text-decoration: underline;
         }
         .install-hint {
-            background: #eef5ff;
+            background: linear-gradient(135deg, #eef5ff 0%, #fbfdff 100%);
             border: 1px solid #cfe2ff;
-            border-radius: 12px;
+            border-radius: 18px;
+            box-shadow: 0 12px 24px rgba(36, 82, 122, 0.08);
             color: #24527a;
-            font-size: 0.94em;
+            font-size: 0.95em;
             font-weight: 600;
+            line-height: 1.45;
             margin-top: 16px;
-            padding: 12px 14px;
+            padding: 14px 16px 14px 56px;
+            position: relative;
+            text-align: left;
+        }
+        .install-hint::before {
+            align-items: center;
+            background: #2b6cb0;
+            border-radius: 999px;
+            color: #ffffff;
+            content: "↑";
+            display: flex;
+            font-size: 1.05em;
+            font-weight: 800;
+            height: 28px;
+            justify-content: center;
+            left: 16px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
         }
 
 
