@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Driver Login - Bus Defect Driver</title>
+    <meta name="theme-color" content="#1f2d3d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Defect Driver">
+    <link rel="manifest" href="./driver.webmanifest">
+    <link rel="apple-touch-icon" href="./images/driver-apple-touch-icon.png">
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body class="driver-auth-body">
@@ -67,6 +73,7 @@
                 Continue with Google
             </button>
 
+            <p id="driverInstallHint" class="driver-install-hint" hidden>On iPhone, tap Share and then Add to Home Screen to install this web app.</p>
             <p class="driver-auth-footnote">Admin site: <a href="./login.html">open the main defect logger</a></p>
         </section>
     </main>
@@ -76,5 +83,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
     <script src="./driver-auth.js"></script>
+    <script src="./driver-pwa.js"></script>
 </body>
 </html>

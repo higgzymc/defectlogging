@@ -1155,6 +1155,18 @@ input[type="range"] {
     text-align: center;
 }
 
+.driver-install-hint {
+    background: linear-gradient(135deg, #fff4e8 0%, #fffaf3 100%);
+    border: 1px solid #ffd2a8;
+    border-radius: 14px;
+    color: #7a4b14;
+    font-size: 0.94em;
+    font-weight: 600;
+    margin: 16px 0 0;
+    padding: 12px 14px;
+    text-align: center;
+}
+
 .driver-auth-status {
     border-radius: 12px;
     font-size: 0.95em;

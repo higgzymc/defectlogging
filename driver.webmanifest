@@ -1,0 +1,22 @@
+{
+  "name": "Bus Defect Driver",
+  "short_name": "Defect Driver",
+  "description": "Driver web app for reporting bus defects and tracking current issues.",
+  "start_url": "/driver-login.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#1f2d3d",
+  "icons": [
+    {
+      "src": "/images/driver-app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/driver-app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
