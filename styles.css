@@ -214,6 +214,10 @@ h3 { font-size: 1.5em; }
     background: linear-gradient(135deg, #ef6c0d 0%, #f08d0b 100%);
 }
 
+.driver-download-hero {
+    margin-top: 88px;
+}
+
 /* Form and Input Elements */
 label {
     display: block;
