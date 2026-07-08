@@ -1,0 +1,7 @@
+{
+  "versionCode": 2,
+  "versionName": "1.1",
+  "apkUrl": "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin.apk",
+  "title": "Admin app update available",
+  "message": "A newer admin APK is ready. Download and install it to keep the defect logger up to date."
+}
