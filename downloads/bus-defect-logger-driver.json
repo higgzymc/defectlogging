@@ -1,7 +1,7 @@
 {
-    "versionCode":  8,
-    "versionName":  "1.7",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.7.apk",
+    "versionCode":  9,
+    "versionName":  "1.8",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.8.apk",
     "title":  "Driver app update available",
     "message":  "A newer driver APK is ready. Download and install it to keep the defect logger up to date."
 }
