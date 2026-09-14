@@ -1,7 +1,7 @@
 {
-    "versionCode":  10,
-    "versionName":  "1.9",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.9.apk",
+    "versionCode":  11,
+    "versionName":  "1.10",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.10.apk",
     "title":  "Admin app update available",
-    "message":  "Version 1.9 adds classification review, instant approval updates, and date-range audit PDF reports."
+    "message":  "Version 1.10 makes the category manager's Cab list searchable and scrollable, so every subcategory is available."
 }
