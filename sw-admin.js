@@ -1,4 +1,4 @@
-const ADMIN_CACHE = "admin-pwa-v1";
+const ADMIN_CACHE = "admin-pwa-v2";
 const ADMIN_ASSETS = [
   "/login.html",
   "/index.html",
