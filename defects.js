@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sortedComments = [...defect.comments].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
                 commentsHtml += sortedComments.map(comment => `
                     <div class="comment-item">
-                        <span>${comment.user} on ${new Date(comment.timestamp).toLocaleString()}:</span>
+                        <span>${comment.user} on ${formatDateTimeValue(comment.timestamp)}:</span>
                         ${comment.text}
                     </div>
                 `).join('');
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p><strong>Defect:</strong> ${escapeHtml(defect.description || 'N/A')}</p>
                 ${buildDvsaGuidanceHtml(defect)}
                 <p><strong>Logged By:</strong> ${loggedByName}</p>
-                <p><strong>Logged On:</strong> ${new Date(defect.timestamp).toLocaleString()}</p>
+                <p><strong>Logged On:</strong> ${formatDateTimeValue(defect.timestamp)}</p>
                 ${imagesHtml}
                 <div class="comments-container">
                     ${commentsHtml}
@@ -863,7 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const loggedByDisplayName = await getDisplayNameForUser(defect.loggedInUser);
                 const imageUrlsCsv = (defect.imageUrls || []).join(', ');
                 const commentsCsv = (defect.comments || []).map(c =>
-                    `${c.user} (${new Date(c.timestamp).toLocaleString()}): ${c.text}`
+                    `${c.user} (${formatDateTimeValue(c.timestamp)}): ${c.text}`
                 ).join('; ');
 
                 return [
@@ -873,7 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     defect.locationArea || 'Not set',
                     defect.subcategory || 'Not set',
                     defect.description,
-                    new Date(defect.timestamp).toLocaleString(),
+                    formatDateTimeValue(defect.timestamp),
                     loggedByDisplayName,
                     defect.isFixed ? 'Fixed' : 'Outstanding',
                     commentsCsv,

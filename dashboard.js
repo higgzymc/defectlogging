@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const sortedMonthKeys = Object.keys(defectsByMonth).sort();
         const labels = sortedMonthKeys.map(monthKey => {
             const [year, month] = monthKey.split('-').map(Number);
-            return new Date(year, month - 1).toLocaleString('en-US', { month: 'short', year: 'numeric' });
+            return new Date(year, month - 1).toLocaleString('en-GB', { month: 'short', year: 'numeric' });
         });
         const data = sortedMonthKeys.map(monthKey => defectsByMonth[monthKey]);
 
