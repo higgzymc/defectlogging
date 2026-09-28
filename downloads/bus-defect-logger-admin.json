@@ -1,7 +1,7 @@
 {
-    "versionCode":  14,
-    "versionName":  "1.13",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.13.apk",
+    "versionCode":  15,
+    "versionName":  "1.14",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.14.apk",
     "title":  "Admin app update available",
-    "message":  "Version 1.13 improves live registration plate scanning for photographed and low-contrast plates."
+    "message":  "Version 1.14 adds a compact outstanding-defects list when a fleet is selected."
 }
