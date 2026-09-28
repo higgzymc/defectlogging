@@ -1,7 +1,7 @@
 {
-    "versionCode":  9,
-    "versionName":  "1.8",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.8.apk",
+    "versionCode":  12,
+    "versionName":  "1.11",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.11.apk",
     "title":  "Driver app update available",
-    "message":  "A newer driver APK is ready. Download and install it to keep the defect logger up to date."
+    "message":  "Version 1.11 adds registration plate scanning. Scan a plate to fill the fleet number automatically, or save an unknown plate to its bus."
 }

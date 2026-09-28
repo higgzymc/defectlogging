@@ -1,7 +1,7 @@
 {
-    "versionCode":  11,
-    "versionName":  "1.10",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.10.apk",
+    "versionCode":  12,
+    "versionName":  "1.11",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.11.apk",
     "title":  "Admin app update available",
-    "message":  "Version 1.10 makes the category manager's Cab list searchable and scrollable, so every subcategory is available."
+    "message":  "Version 1.11 adds registration plate scanning. Scan a plate to fill the fleet number automatically, or save an unknown plate to its bus."
 }
