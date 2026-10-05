@@ -1,7 +1,7 @@
 {
-    "versionCode":  18,
-    "versionName":  "1.17",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.17-pre-release.apk",
+    "versionCode":  19,
+    "versionName":  "1.18",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-admin-v1.18-pre-release.apk",
     "title":  "Admin app update available",
-    "message":  "Pre-release 1.17 adds a simple step-by-step defect logging flow for admin users."
+    "message":  "Pre-release 1.18 adds quick tick and delete actions for outstanding fleet defects."
 }
