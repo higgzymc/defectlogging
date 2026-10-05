@@ -1,7 +1,7 @@
 {
-    "versionCode":  17,
-    "versionName":  "1.16",
-    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.16.apk",
+    "versionCode":  21,
+    "versionName":  "1.20",
+    "apkUrl":  "https://defectlogging.netlify.app/downloads/bus-defect-logger-driver-v1.20.apk",
     "title":  "Driver app update available",
-    "message":  "Version 1.16 improves plate recognition and makes multi-word defect searches exact."
+    "message":  "Version 1.20 adds driver fixed requests for admin approval and guided defect entry for both apps."
 }
