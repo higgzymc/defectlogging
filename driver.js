@@ -55,10 +55,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeUser = null;
     let userRecordUnsubscribe = null;
     let defectsUnsubscribe = null;
+    let fixedRequestsUnsubscribe = null;
     let currentAllDefects = [];
+    let currentFixedRequests = [];
     let currentRepeatingGroups = [];
     let userDisplayNames = {};
     let pendingGuidanceAction = null;
+    let currentDriverStep = 1;
 
     const DriverAccessState = window.DriverAccessState || {
         ALLOWED: 'allowed',
@@ -87,6 +90,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const setCategoryError = (message = '') => {
         driverCategoryError.textContent = message;
     };
+
+    function setDriverStep(step) {
+        currentDriverStep = step;
+        document.querySelectorAll('.driver-form-step').forEach((panel) => {
+            const active = Number(panel.dataset.driverStep) === step;
+            panel.hidden = !active;
+            panel.classList.toggle('active', active);
+        });
+    }
 
     const setApprovalBadge = (label, className) => {
         driverApprovalBadge.textContent = label;
@@ -248,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderImagePreviews();
         driverPhotoLibraryInput.value = '';
         driverCameraInput.value = '';
+        setDriverStep(1);
     }
 
     async function submitDefect() {
@@ -260,8 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (!fleetNumber || !description) {
-            setFormStatus('Enter a fleet number and defect description before submitting.', 'error');
+        if (!fleetNumber) {
+            setFormStatus('Enter a fleet number before submitting.', 'error');
             return;
         }
 
@@ -307,6 +320,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 driverSubmitBtn.disabled = false;
             }
         });
+    }
+
+    async function requestDefectFixed(defectId) {
+        const defect = currentAllDefects.find((item) => item.id === defectId);
+        if (!defect || !activeUser || currentFixedRequests.some((request) => request.defectId === defectId)) return;
+        try {
+            await driverDb.collection('pendingFixedDefects').add({
+                defectId,
+                fleetNumber: defect.fleetNumber || '',
+                defectLabel: [defect.locationArea, defect.subcategory, defect.subSubcategory].filter(Boolean).join(' - '),
+                description: defect.description || '',
+                timestamp: new Date().toISOString(),
+                submittedByUid: activeUser.uid,
+                submittedByName: activeUser.displayName || activeUser.email || 'Unknown'
+            });
+        } catch (error) {
+            console.error('Could not request defect fixed:', error);
+            alert(error.message || 'Could not send the fixed request.');
+        }
     }
 
     function defectPatternText(defect) {
@@ -484,13 +516,17 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `<div class="defect-image-display">${imageUrls.map((url) => `<a href="${url}" target="_blank" rel="noopener noreferrer"><img src="${url}" alt="Defect image" class="defect-image" loading="lazy"></a>`).join('')}</div>`
             : '';
 
+        const fixedRequest = currentFixedRequests.find((request) => request.defectId === defect.id);
+        const fixedRequestHtml = !defect.isFixed
+            ? `<div class="actions"><button type="button" class="mark-fixed-btn request-fixed-btn" data-id="${escapeHtml(defect.id)}" ${fixedRequest ? 'disabled' : ''}>${fixedRequest ? 'Fixed pending approval' : 'Mark fixed'}</button></div>`
+            : '';
         card.innerHTML = `
             <div class="defect-card-topline">
                 <div>
                     <div class="defect-card-title">Fleet ${escapeHtml(defect.fleetNumber || 'N/A')}</div>
                     <div class="defect-card-subtitle">${escapeHtml(defect.busType || getVehicleTypeForFleetNumber(defect.fleetNumber) || 'Unknown')}</div>
                 </div>
-                <div class="defect-card-status ${defect.isFixed ? 'status-fixed' : 'status-open'}">${defect.isFixed ? 'Fixed' : 'Outstanding'}</div>
+                <div class="defect-card-status ${defect.isFixed ? 'status-fixed' : fixedRequest ? 'status-pending' : 'status-open'}">${defect.isFixed ? 'Fixed' : fixedRequest ? 'Fixed pending' : 'Outstanding'}</div>
             </div>
             <div class="detail-chip-row">
                 ${buildAreaBadgeHtml(defect)}
@@ -501,6 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Logged On:</strong> ${formatDateTimeValue(defect.timestamp)}</p>
             ${imagesHtml}
             <div class="comments-container">${formatCommentsHtml(defect.comments)}</div>
+            ${fixedRequestHtml}
         `;
         return card;
     }
@@ -577,6 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initializeDefectListener() {
         if (defectsUnsubscribe) defectsUnsubscribe();
+        if (fixedRequestsUnsubscribe) fixedRequestsUnsubscribe();
         defectsUnsubscribe = driverDb.collection('defects').orderBy('timestamp', 'desc').onSnapshot(async (snapshot) => {
             currentAllDefects = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
             await fetchUserNames(currentAllDefects);
@@ -587,6 +625,12 @@ document.addEventListener('DOMContentLoaded', () => {
             driverOpenDefectsList.innerHTML = `<p>${message}</p>`;
             driverFixedDefectsList.innerHTML = `<p>${message}</p>`;
             driverRepeatingDefectsList.innerHTML = `<p>${message}</p>`;
+        });
+        fixedRequestsUnsubscribe = driverDb.collection('pendingFixedDefects').where('submittedByUid', '==', activeUser.uid).onSnapshot((snapshot) => {
+            currentFixedRequests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            updateDefectViews();
+        }, (error) => {
+            console.error('Error loading fixed requests:', error);
         });
     }
 
@@ -618,6 +662,10 @@ document.addEventListener('DOMContentLoaded', () => {
             defectsUnsubscribe();
             defectsUnsubscribe = null;
         }
+        if (fixedRequestsUnsubscribe) {
+            fixedRequestsUnsubscribe();
+            fixedRequestsUnsubscribe = null;
+        }
 
         if (accessState === DriverAccessState.PENDING) {
             setApprovalBadge('Pending', 'pending');
@@ -646,6 +694,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (defectsUnsubscribe) {
                 defectsUnsubscribe();
                 defectsUnsubscribe = null;
+            }
+            if (fixedRequestsUnsubscribe) {
+                fixedRequestsUnsubscribe();
+                fixedRequestsUnsubscribe = null;
             }
             window.location.href = './driver-login.html';
             return;
@@ -694,6 +746,31 @@ document.addEventListener('DOMContentLoaded', () => {
     driverPhotoLibraryInput.addEventListener('change', (event) => addImages(event.target.files));
     driverCameraInput.addEventListener('change', (event) => addImages(event.target.files));
     driverSubmitBtn.addEventListener('click', submitDefect);
+    document.querySelectorAll('.wizard-next-btn').forEach((button) => {
+        button.addEventListener('click', () => {
+            const nextStep = Number(button.dataset.nextStep);
+            if (nextStep === 2 && !validateFleetNumber()) {
+                setFormStatus('Choose a valid fleet number first.', 'error');
+                return;
+            }
+            if (nextStep === 3 && !validateCategorySelection()) {
+                setFormStatus('Choose the defect area and subcategory first.', 'error');
+                return;
+            }
+            setFormStatus('');
+            setDriverStep(nextStep);
+        });
+    });
+    document.querySelectorAll('.wizard-back-btn').forEach((button) => {
+        button.addEventListener('click', () => setDriverStep(Number(button.dataset.backStep)));
+    });
+    driverOpenDefectsList.addEventListener('click', (event) => {
+        const button = event.target.closest('.request-fixed-btn');
+        if (!button || button.disabled) return;
+        if (confirm('Send this defect to the administrator for fixed approval?')) {
+            requestDefectFixed(button.dataset.id);
+        }
+    });
 
     document.querySelectorAll('.driver-tab-btn').forEach((button) => {
         button.addEventListener('click', () => switchDriverTab(button.dataset.driverTab));

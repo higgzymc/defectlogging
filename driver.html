@@ -80,12 +80,18 @@
             </div>
             <p class="driver-panel-copy">Choose the fleet, pick the location, then send the report. It will go into the approval queue rather than straight onto the live defect list.</p>
 
+            <div class="driver-form-step active" data-driver-step="1">
+            <h3>1. Choose the bus</h3>
             <label for="driverFleetNumber">Fleet Number</label>
             <input type="text" id="driverFleetNumber" list="driverFleetNumberOptions" inputmode="numeric" autocomplete="off" placeholder="e.g. 2005">
             <datalist id="driverFleetNumberOptions"></datalist>
             <div id="driverVehicleType" class="vehicle-type-display">Vehicle type will appear after choosing a fleet number.</div>
             <div id="driverFleetError" class="field-error" aria-live="polite"></div>
+            <button type="button" class="driver-primary-btn wizard-next-btn" data-next-step="2">Continue</button>
+            </div>
 
+            <div class="driver-form-step" data-driver-step="2" hidden>
+            <h3>2. Select the defect</h3>
             <div class="category-picker-grid driver-picker-grid">
                 <div>
                     <label for="driverSelectAreaBtn">Defect Area</label>
@@ -99,10 +105,12 @@
                 </div>
             </div>
             <div id="driverCategoryError" class="field-error" aria-live="polite"></div>
+            <button type="button" class="driver-secondary-btn wizard-back-btn" data-back-step="1">Back</button>
+            <button type="button" class="driver-primary-btn wizard-next-btn" data-next-step="3">Continue</button>
+            </div>
 
-            <label for="driverDefectDescription">Defect Description</label>
-            <textarea id="driverDefectDescription" rows="5" placeholder="Describe the fault clearly so it can be approved quickly."></textarea>
-
+            <div class="driver-form-step" data-driver-step="3" hidden>
+            <h3>3. Add a photo <span>(optional)</span></h3>
             <div class="driver-upload-toolbar">
                 <button type="button" id="driverTakePhotoBtn" class="driver-secondary-btn">Take Photo</button>
                 <button type="button" id="driverChoosePhotosBtn" class="driver-secondary-btn">Choose From Photos</button>
@@ -113,8 +121,18 @@
             </div>
             <input type="file" id="driverPhotoLibraryInput" accept="image/*" multiple hidden>
             <input type="file" id="driverCameraInput" accept="image/*" capture="environment" hidden>
+            <button type="button" class="driver-secondary-btn wizard-back-btn" data-back-step="2">Back</button>
+            <button type="button" class="driver-primary-btn wizard-next-btn" data-next-step="4">Continue</button>
+            </div>
 
+            <div class="driver-form-step" data-driver-step="4" hidden>
+            <h3>4. Add a description <span>(optional)</span></h3>
+            <p class="driver-panel-copy">The detailed defect type is enough if you do not need to add extra detail.</p>
+            <label for="driverDefectDescription">Defect Description</label>
+            <textarea id="driverDefectDescription" rows="5" placeholder="Add any extra detail (optional)."></textarea>
             <button type="button" id="driverSubmitBtn" class="driver-primary-btn">Submit Defect</button>
+            <button type="button" class="driver-secondary-btn wizard-back-btn" data-back-step="3">Back</button>
+            </div>
             <div id="driverFormStatus" class="form-status" aria-live="polite"></div>
             </section>
 

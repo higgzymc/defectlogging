@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const pendingDefectsCount = document.getElementById('pendingDefectsCount');
     const pendingFleetCount = document.getElementById('pendingFleetCount');
     const pendingUsersCount = document.getElementById('pendingUsersCount');
+    const pendingFixedList = document.getElementById('pendingFixedList');
+    const pendingFixedCount = document.getElementById('pendingFixedCount');
     const approvalGuidanceModal = document.getElementById('approvalGuidanceModal');
     const approvalGuidanceContent = document.getElementById('approvalGuidanceContent');
     const closeApprovalGuidanceBtn = document.getElementById('closeApprovalGuidanceBtn');
@@ -11,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPendingDefects = [];
     let currentPendingUsers = [];
+    let currentPendingFixed = [];
     let currentAdminUser = null;
 
     function escapeHtml(value) {
@@ -96,6 +99,28 @@ document.addEventListener('DOMContentLoaded', () => {
         pendingDefectsCount.textContent = String(currentPendingDefects.length);
         pendingFleetCount.textContent = String(new Set(currentPendingDefects.map((defect) => String(defect.fleetNumber || ''))).size);
         pendingUsersCount.textContent = String(currentPendingUsers.length);
+        pendingFixedCount.textContent = String(currentPendingFixed.length);
+    }
+
+    function renderPendingFixed() {
+        updateStats();
+        pendingFixedList.innerHTML = '';
+        if (currentPendingFixed.length === 0) {
+            pendingFixedList.innerHTML = '<p>No fixed requests are waiting for approval.</p>';
+            return;
+        }
+        currentPendingFixed.forEach((request) => {
+            const item = document.createElement('div');
+            item.className = 'defect-item pending-defect';
+            item.dataset.id = request.id;
+            item.innerHTML = `
+                <div class="defect-card-topline"><div><div class="defect-card-title">Fleet ${escapeHtml(request.fleetNumber || 'N/A')}</div><div class="defect-card-subtitle">${escapeHtml(request.defectLabel || 'Defect')}</div></div><div class="defect-card-status status-pending">Fixed pending</div></div>
+                <p><strong>Defect:</strong> ${escapeHtml(request.description || 'No description')}</p>
+                <p><strong>Requested by:</strong> ${escapeHtml(request.submittedByName || 'Unknown')} on ${formatDateTimeValue(request.timestamp)}</p>
+                <div class="actions"><button type="button" class="approve-fixed-btn approve-btn" data-id="${escapeHtml(request.id)}">Approve fixed</button><button type="button" class="reject-fixed-btn delete-btn" data-id="${escapeHtml(request.id)}">Reject</button></div>
+            `;
+            pendingFixedList.appendChild(item);
+        });
     }
 
     function renderPendingDefects() {
@@ -243,7 +268,41 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading pending users:', error);
             pendingUsersList.innerHTML = '<p>Could not load pending users.</p>';
         });
+
+        db.collection('pendingFixedDefects').orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
+            currentPendingFixed = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+            renderPendingFixed();
+        }, (error) => {
+            console.error('Error loading fixed requests:', error);
+            pendingFixedList.innerHTML = '<p>Could not load fixed requests.</p>';
+        });
     }
+
+    pendingFixedList.addEventListener('click', async (event) => {
+        const target = event.target;
+        const id = target.dataset.id;
+        if (!id) return;
+        const request = currentPendingFixed.find((item) => item.id === id);
+        if (!request) return;
+        try {
+            if (target.classList.contains('approve-fixed-btn')) {
+                const batch = db.batch();
+                batch.update(db.collection('defects').doc(request.defectId), {
+                    isFixed: true,
+                    fixedApprovedByUid: currentAdminUser.uid,
+                    fixedApprovedByName: currentAdminUser.displayName || currentAdminUser.email || 'Admin',
+                    fixedApprovedAt: new Date().toISOString()
+                });
+                batch.delete(db.collection('pendingFixedDefects').doc(id));
+                await batch.commit();
+            } else if (target.classList.contains('reject-fixed-btn') && confirm('Reject this fixed request? The defect will remain outstanding.')) {
+                await db.collection('pendingFixedDefects').doc(id).delete();
+            }
+        } catch (error) {
+            console.error('Fixed request action failed:', error);
+            alert('That fixed request action could not be completed.');
+        }
+    });
 
     pendingDefectsList.addEventListener('click', async (event) => {
         const target = event.target;

@@ -531,6 +531,7 @@ button:active {
     background: #fff4d6;
     color: #9a6700;
 }
+.status-pending { background-color: #fff3cd; color: #856404; }
 .status-fixed {
     background: #dff5e4;
     color: #1f6f35;
@@ -1387,7 +1388,12 @@ input[type="range"] {
 .driver-defects-list {
     display: grid;
     gap: 14px;
+    max-height: 520px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 4px;
 }
+.request-fixed-btn:disabled { opacity: .75; cursor: default; }
 
 .driver-defects-list .defect-item {
     margin-bottom: 0;
@@ -1440,6 +1446,11 @@ input[type="range"] {
     margin-bottom: 16px;
     min-height: 120px;
 }
+
+.driver-form-step h3 { margin: 0 0 12px; color: #243b53; }
+.driver-form-step h3 span { font-size: .8em; font-weight: 500; color: #6c757d; }
+.driver-form-step > .driver-primary-btn,
+.driver-form-step > .driver-secondary-btn { margin-top: 12px; }
 
 @media (max-width: 768px) {
     .driver-web-shell,

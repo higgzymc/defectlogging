@@ -48,6 +48,7 @@
         <section id="approvalSection">
             <div class="tab-navigation">
                 <button type="button" class="tab-btn active" data-tab="pending-defects">Pending Defects</button>
+                <button type="button" class="tab-btn" data-tab="pending-fixed">Fixed Requests</button>
                 <button type="button" class="tab-btn" data-tab="pending-users">Pending Users</button>
             </div>
 
@@ -65,6 +66,13 @@
                 <div id="pendingDefectsList">
                     <p>Loading pending defects...</p>
                 </div>
+            </div>
+
+            <div id="pending-fixed-tab" class="tab-content">
+                <div class="stats-container">
+                    <div class="stat-card"><h4>Fixed Requests</h4><p id="pendingFixedCount">0</p></div>
+                </div>
+                <div id="pendingFixedList"><p>Loading fixed requests...</p></div>
             </div>
 
             <div id="pending-users-tab" class="tab-content">
