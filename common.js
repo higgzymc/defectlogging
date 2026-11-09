@@ -21,7 +21,8 @@ window.defectFunctions = defectFunctions;
 const ADMIN_UIDS = [
     'rU4JIIljCmTwKyga9m3siHWVFYZ2',
     'mEuORhJLRXeN5GEXguuqhtOmwbq2',
-    'oIUna4EtjVQWSOqbytp0pZnnhHG3'
+    'oIUna4EtjVQWSOqbytp0pZnnhHG3',
+    'xjRiPRyewhhgSWHD0Y9EC1fUBAm1'
 ];
 
 // --- Core Authentication and Page Setup ---
